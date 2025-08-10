@@ -20,7 +20,6 @@ from django.utils.translation import gettext, gettext_noop
 from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PageChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.search import index
 from modelcluster.fields import ParentalKey
@@ -276,7 +275,7 @@ class RecurringEventPage(EventBase, Page, metaclass=FormDefender):
 
     content_panels0 = Page.content_panels + [
         FieldPanel("category"),
-        ImageChooserPanel("image"),
+        FieldPanel("image"),
         FieldPanel("repeat"),
     ]
     content_panels1 = [
@@ -1357,7 +1356,7 @@ class PostponementPage(RoutablePageMixin, RescheduleEventBase, CancellationPage)
 
     postponement_panel0 = [
         FieldPanel("postponement_title", classname="full title"),
-        ImageChooserPanel("image"),
+        FieldPanel("image"),
         FieldPanel("date"),
     ]
     postponement_panel1 = [

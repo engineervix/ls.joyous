@@ -7,7 +7,6 @@ from django.db.models.query import ModelIterable
 from django.utils.translation import gettext_lazy as _
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 
 from ..utils.telltime import todayUtc, getLocalDatetime, getLocalDate, getLocalTime
 from ..edit_handlers import TimePanel
@@ -86,7 +85,7 @@ class SimpleEventPage(EventBase, Page, metaclass=FormDefender):
         Page.content_panels
         + [
             FieldPanel("category"),
-            ImageChooserPanel("image"),
+            FieldPanel("image"),
             FieldPanel("date"),
             TimePanel("time_from"),
             TimePanel("time_to"),
@@ -194,7 +193,7 @@ class MultidayEventPage(EventBase, Page, metaclass=FormDefender):
         Page.content_panels
         + [
             FieldPanel("category"),
-            ImageChooserPanel("image"),
+            FieldPanel("image"),
             FieldPanel("date_from"),
             TimePanel("time_from"),
             FieldPanel("date_to"),

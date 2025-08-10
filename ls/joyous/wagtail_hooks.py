@@ -3,8 +3,8 @@
 # ------------------------------------------------------------------------------
 
 from wagtail import hooks
-from wagtail.contrib.modeladmin.options import ModelAdmin
-from wagtail.contrib.modeladmin.options import modeladmin_register
+from wagtail_modeladmin.options import ModelAdmin
+from wagtail_modeladmin.options import modeladmin_register
 from .models import EventCategory, CalendarPage, CalendarPageForm
 from .formats import NullHandler, ICalHandler, GoogleCalendarHandler, RssHandler
 
