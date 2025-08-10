@@ -105,7 +105,7 @@ try:
     # Use wagtailgmaps for location if it is installed
     # but don't depend upon it
     settings.INSTALLED_APPS.index("wagtailgmaps")
-    from wagtailgmaps.edit_handlers import MapFieldPanel
+    from wagtailgmaps.panels import MapFieldPanel
 
     MapFieldPanel.UsingWagtailGMaps = True
 except (ValueError, ImportError):  # pragma: no cover

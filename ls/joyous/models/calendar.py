@@ -18,7 +18,7 @@ from wagtail.fields import RichTextField
 from wagtail.admin.panels import HelpPanel, FieldPanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from .. import __version__
-from ..edit_handlers import ConcealedPanel
+from ..panels import ConcealedPanel
 from ..holidays import Holidays
 from ..utils.names import WEEKDAY_NAMES, MONTH_NAMES, MONTH_ABBRS
 from ..utils.weeks import week_info, gregorian_to_week_date, num_weeks_in_year

@@ -38,7 +38,7 @@ from ..utils.telltime import getTimeFrom, getTimeTo
 from ..utils.telltime import timeFormat, dateFormat
 from ..fields import RecurrenceField
 from ..forms import FormDefender, BorgPageForm
-from ..edit_handlers import TZDatePanel, ExceptionDatePanel, TimePanel, MapFieldPanel
+from ..panels import TZDatePanel, ExceptionDatePanel, TimePanel, MapFieldPanel
 from ..holidays import Holidays
 from .groups import get_group_model_string
 from .event_base import (

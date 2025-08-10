@@ -9,7 +9,7 @@ from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
 
 from ..utils.telltime import todayUtc, getLocalDatetime, getLocalDate, getLocalTime
-from ..edit_handlers import TimePanel
+from ..panels import TimePanel
 from ..forms import FormDefender
 from .groups import get_group_model_string
 from .event_base import (

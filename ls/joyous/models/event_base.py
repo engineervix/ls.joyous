@@ -30,7 +30,7 @@ from wagtail.search import index
 from ..utils.telltime import getLocalDateAndTime
 from ..utils.telltime import getTimeFrom, getTimeTo
 from ..utils.telltime import timeFormat, dateFormat
-from ..edit_handlers import MapFieldPanel
+from ..panels import MapFieldPanel
 from ..forms import BorgPageForm
 from .groups import get_group_model_string, get_group_model
 

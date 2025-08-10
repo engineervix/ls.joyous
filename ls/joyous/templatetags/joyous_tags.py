@@ -14,7 +14,7 @@ from ..models import getGroupUpcomingEvents
 from ..models import getAllEventsByWeek
 from ..models import CalendarPage
 from ..utils.weeks import weekday_abbr, weekday_name
-from ..edit_handlers import MapFieldPanel
+from ..panels import MapFieldPanel
 
 register = template.Library()
 

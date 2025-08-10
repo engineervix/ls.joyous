@@ -22,10 +22,10 @@ from ls.joyous.models import (
     MultidayRecurringEventPage,
 )
 from ls.joyous.utils.recurrence import Recurrence, MONTHLY, YEARLY, TU, FR
-from ls.joyous.edit_handlers import ExceptionDatePanel, ConcealedPanel
+from ls.joyous.panels import ExceptionDatePanel, ConcealedPanel
 from ls.joyous.widgets import Time12hrInput, ExceptionDateInput
 from .testutils import getPage
-import ls.joyous.edit_handlers
+import ls.joyous.panels
 import importlib
 from wagtail import VERSION as _wt_version
 
@@ -119,19 +119,19 @@ class TestExceptionDatePanel(TestCase):
 @override_settings(JOYOUS_TIME_INPUT=12)
 class TestTime12hrPanel(TestCase):
     def testWidget(self):
-        importlib.reload(ls.joyous.edit_handlers)
-        from ls.joyous.edit_handlers import TimePanel
+        importlib.reload(ls.joyous.panels)
+        from ls.joyous.panels import TimePanel
 
         self.assertIs(TimePanel.widget, Time12hrInput)
 
     def testDefaultTimeInput(self):
-        importlib.reload(ls.joyous.edit_handlers)
+        importlib.reload(ls.joyous.panels)
         self.assertIn("%I:%M%p", settings.TIME_INPUT_FORMATS)
         self.assertIn("%I%p", settings.TIME_INPUT_FORMATS)
 
     @override_settings(LANGUAGE_CODE="en-nz")
     def testNZLocaleTimeInput(self):
-        importlib.reload(ls.joyous.edit_handlers)
+        importlib.reload(ls.joyous.panels)
         format = get_format("TIME_INPUT_FORMATS")
         self.assertIn("%I:%M%p", format)
         self.assertIn("%I%p", format)
