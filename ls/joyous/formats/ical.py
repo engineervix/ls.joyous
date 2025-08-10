@@ -632,7 +632,11 @@ class VEvent(Event, VComponentMixin):
         vevent.set("SUMMARY", page.title)
         vevent.set("SEQUENCE", page.revisions.count())
         vevent.set("DTSTAMP", vDatetime(timezone.now()))
-        vevent.set("CREATED", vDatetime(firstRevision.created_at))
+        if firstRevision:
+            vevent.set("CREATED", vDatetime(firstRevision.created_at))
+        else:
+            # Fallback to current time if no revision exists
+            vevent.set("CREATED", vDatetime(timezone.now()))
         vevent.set("LAST-MODIFIED", vDatetime(page.latest_revision_created_at))
         return vevent
 
