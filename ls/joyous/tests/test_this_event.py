@@ -4,7 +4,7 @@
 import datetime as dt
 from django_bs_test import TestCase
 from django.contrib.auth.models import User
-from wagtail.core.models import Page
+from wagtail.models import Page
 from ls.joyous.models import SpecificCalendarPage
 from ls.joyous.models import SimpleEventPage, ThisEvent
 

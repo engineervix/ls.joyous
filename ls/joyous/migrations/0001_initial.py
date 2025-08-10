@@ -7,7 +7,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import ls.joyous.fields
 import wagtail.contrib.routable_page.models
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                         to="wagtailcore.Page",
                     ),
                 ),
-                ("intro", wagtail.core.fields.RichTextField(blank=True)),
+                ("intro", wagtail.fields.RichTextField(blank=True)),
             ],
             options={
                 "abstract": False,
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "cancellation_details",
-                    wagtail.core.fields.RichTextField(
+                    wagtail.fields.RichTextField(
                         blank=True,
                         help_text="Why was the event cancelled?",
                         verbose_name="Details",
@@ -130,7 +130,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra_information",
-                    wagtail.core.fields.RichTextField(
+                    wagtail.fields.RichTextField(
                         help_text="Information just for this date"
                     ),
                 ),
@@ -154,7 +154,7 @@ class Migration(migrations.Migration):
                         to="wagtailcore.Page",
                     ),
                 ),
-                ("content", wagtail.core.fields.RichTextField(blank=True, default="")),
+                ("content", wagtail.fields.RichTextField(blank=True, default="")),
             ],
             options={
                 "abstract": False,
@@ -184,7 +184,7 @@ class Migration(migrations.Migration):
                     models.TimeField(blank=True, null=True, verbose_name="End time"),
                 ),
                 ("location", models.CharField(blank=True, max_length=255)),
-                ("details", wagtail.core.fields.RichTextField(blank=True)),
+                ("details", wagtail.fields.RichTextField(blank=True)),
                 ("website", models.URLField(blank=True)),
                 (
                     "date_from",
@@ -259,7 +259,7 @@ class Migration(migrations.Migration):
                     models.TimeField(blank=True, null=True, verbose_name="End time"),
                 ),
                 ("location", models.CharField(blank=True, max_length=255)),
-                ("details", wagtail.core.fields.RichTextField(blank=True)),
+                ("details", wagtail.fields.RichTextField(blank=True)),
                 ("website", models.URLField(blank=True)),
                 ("repeat", ls.joyous.fields.RecurrenceField()),
                 (
@@ -323,7 +323,7 @@ class Migration(migrations.Migration):
                     models.TimeField(blank=True, null=True, verbose_name="End time"),
                 ),
                 ("location", models.CharField(blank=True, max_length=255)),
-                ("details", wagtail.core.fields.RichTextField(blank=True)),
+                ("details", wagtail.fields.RichTextField(blank=True)),
                 ("website", models.URLField(blank=True)),
                 (
                     "date",
@@ -390,7 +390,7 @@ class Migration(migrations.Migration):
                     models.TimeField(blank=True, null=True, verbose_name="End time"),
                 ),
                 ("location", models.CharField(blank=True, max_length=255)),
-                ("details", wagtail.core.fields.RichTextField(blank=True)),
+                ("details", wagtail.fields.RichTextField(blank=True)),
                 ("website", models.URLField(blank=True)),
                 (
                     "postponement_title",

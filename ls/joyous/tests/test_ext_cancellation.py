@@ -4,7 +4,7 @@
 import datetime as dt
 from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
-from wagtail.core.models import Page, PageViewRestriction
+from wagtail.models import Page, PageViewRestriction
 from ls.joyous.models import CalendarPage
 from ls.joyous.models import RecurringEventPage
 from ls.joyous.models import ExtCancellationPage

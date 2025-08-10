@@ -11,7 +11,7 @@ from django.core.exceptions import (
     PermissionDenied,
 )
 from django.utils import timezone
-from wagtail.core.models import Site, Page, PageViewRestriction
+from wagtail.models import Site, Page, PageViewRestriction
 from ls.joyous.utils.recurrence import Recurrence
 from ls.joyous.utils.recurrence import WEEKLY, MONTHLY, MO, TU, WE, FR, SU
 from ls.joyous.models import GeneralCalendarPage

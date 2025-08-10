@@ -8,8 +8,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.formats import get_format
-from wagtail.admin.edit_handlers import get_form_for_model
-from wagtail.core.models import Site
+from wagtail.admin.panels import get_form_for_model
+from wagtail.models import Site
 from ls.joyous.models.recurring_events import (
     CancellationPageForm,
     RecurringEventPageForm,

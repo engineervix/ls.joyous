@@ -5,7 +5,7 @@ import datetime as dt
 import pytz
 from django.test import TestCase
 from django.utils import timezone
-from wagtail.core.models import Page
+from wagtail.models import Page
 from icalendar import vDatetime, vDate, vRecur
 from ls.joyous.utils.telltime import getLocalDatetime
 from ls.joyous.formats.ical import (

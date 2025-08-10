@@ -2,7 +2,7 @@
 # Events hooks
 # ------------------------------------------------------------------------------
 
-from wagtail.core import hooks
+from wagtail import hooks
 from wagtail.contrib.modeladmin.options import ModelAdmin
 from wagtail.contrib.modeladmin.options import modeladmin_register
 from .models import EventCategory, CalendarPage, CalendarPageForm

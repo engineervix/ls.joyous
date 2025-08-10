@@ -5,7 +5,7 @@ import datetime as dt
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 from wagtail.admin.forms import WagtailAdminPageForm
-from wagtail.core.models import Page
+from wagtail.models import Page
 from ls.joyous.forms import (
     FormDefender,
     FormClassOverwriteWarning,

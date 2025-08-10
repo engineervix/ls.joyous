@@ -7,7 +7,7 @@ import django.db.models.deletion
 import ls.joyous.fields
 import ls.joyous.models.events
 import timezone_field.fields
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="calendarpage",
             name="intro",
-            field=wagtail.core.fields.RichTextField(blank=True, verbose_name="intro"),
+            field=wagtail.fields.RichTextField(blank=True, verbose_name="intro"),
         ),
         migrations.AlterField(
             model_name="calendarpage",
@@ -123,7 +123,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="cancellationpage",
             name="cancellation_details",
-            field=wagtail.core.fields.RichTextField(
+            field=wagtail.fields.RichTextField(
                 blank=True,
                 help_text="Why was the event cancelled?",
                 verbose_name="details",
@@ -164,7 +164,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="extrainfopage",
             name="extra_information",
-            field=wagtail.core.fields.RichTextField(
+            field=wagtail.fields.RichTextField(
                 help_text="Information just for this date",
                 verbose_name="extra information",
             ),
@@ -194,7 +194,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="grouppage",
             name="content",
-            field=wagtail.core.fields.RichTextField(
+            field=wagtail.fields.RichTextField(
                 blank=True,
                 default="",
                 help_text="An area of text for whatever you like",
@@ -230,7 +230,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="multidayeventpage",
             name="details",
-            field=wagtail.core.fields.RichTextField(blank=True, verbose_name="details"),
+            field=wagtail.fields.RichTextField(blank=True, verbose_name="details"),
         ),
         migrations.AlterField(
             model_name="multidayeventpage",
@@ -303,7 +303,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="postponementpage",
             name="details",
-            field=wagtail.core.fields.RichTextField(blank=True, verbose_name="details"),
+            field=wagtail.fields.RichTextField(blank=True, verbose_name="details"),
         ),
         migrations.AlterField(
             model_name="postponementpage",
@@ -372,7 +372,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="recurringeventpage",
             name="details",
-            field=wagtail.core.fields.RichTextField(blank=True, verbose_name="details"),
+            field=wagtail.fields.RichTextField(blank=True, verbose_name="details"),
         ),
         migrations.AlterField(
             model_name="recurringeventpage",
@@ -462,7 +462,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="simpleeventpage",
             name="details",
-            field=wagtail.core.fields.RichTextField(blank=True, verbose_name="details"),
+            field=wagtail.fields.RichTextField(blank=True, verbose_name="details"),
         ),
         migrations.AlterField(
             model_name="simpleeventpage",

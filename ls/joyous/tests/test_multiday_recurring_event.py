@@ -4,7 +4,7 @@
 import datetime as dt
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
-from wagtail.core.models import Page
+from wagtail.models import Page
 from ls.joyous.utils.recurrence import Recurrence
 from ls.joyous.utils.recurrence import WEEKLY, YEARLY
 from ls.joyous.utils.recurrence import SA, MO, FR

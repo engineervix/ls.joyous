@@ -8,7 +8,7 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib import messages
 from django.utils import timezone
 from django.test import TestCase, RequestFactory
-from wagtail.core.models import Site, Page, PageViewRestriction
+from wagtail.models import Site, Page, PageViewRestriction
 from ls.joyous.utils.recurrence import Recurrence
 from ls.joyous.utils.recurrence import WEEKLY, MO, WE, TH, FR
 from ls.joyous.models import (
