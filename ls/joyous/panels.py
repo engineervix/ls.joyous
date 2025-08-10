@@ -139,11 +139,32 @@ class ConcealedPanel(MultiFieldPanel):
 
     class BoundPanel(MultiFieldPanel.BoundPanel):
         def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            if self.is_shown():
-                # Only reveal heading/help_text when shown
-                self.heading = self.panel._heading
-                self.help_text = self.panel._help_text
+            # Set heading/help_text before calling super if should be shown and has request
+            if self._should_reveal_content(kwargs):
+                # Temporarily modify the panel to have the actual heading/help_text for rendering
+                panel = kwargs['panel']
+                original_heading = panel.heading
+                original_help_text = panel.help_text
+                panel.heading = panel._heading
+                panel.help_text = panel._help_text
+                
+                super().__init__(**kwargs)
+                
+                # Restore original values
+                panel.heading = original_heading 
+                panel.help_text = original_help_text
+                
+                # Set the bound panel attributes 
+                self.heading = panel._heading
+                self.help_text = panel._help_text
+            else:
+                super().__init__(**kwargs)
+        
+        def _should_reveal_content(self, kwargs):
+            """Check if content should be revealed (panel is shown and has request)"""
+            panel = kwargs['panel']
+            request = kwargs.get('request')
+            return panel._show() and request is not None
 
         def is_shown(self):
             # Delegate to panel logic (which can be overridden in subclasses)
@@ -152,7 +173,18 @@ class ConcealedPanel(MultiFieldPanel):
         def render_html(self, parent_context=None):
             if not self.is_shown():
                 return ""
-            return super().render_html(parent_context)
+            
+            content = super().render_html(parent_context)
+            
+            # If we have a heading to show and the content doesn't contain it, 
+            # we need to add it manually since MultiFieldPanel with no children
+            # doesn't render the heading
+            if (hasattr(self, 'request') and self.request and 
+                self.heading and self.heading not in content):
+                # Wrap content with heading
+                content = f'<div><h3>{self.heading}</h3>{content}</div>'
+            
+            return content
 
     def _show(self):
         return False

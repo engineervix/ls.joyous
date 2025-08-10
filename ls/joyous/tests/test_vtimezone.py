@@ -45,7 +45,7 @@ class TestVDt(TestCase):
             [
                 b"BEGIN:STANDARD",
                 b"DTSTART;VALUE=DATE-TIME:20141026T020000",
-                b"RDATE:20151025T020000,20161030T020000",
+                b"RDATE;VALUE=DATE-TIME:20151025T020000,20161030T020000",
                 b"TZNAME:CET",
                 b"TZOFFSETFROM:+0200",
                 b"TZOFFSETTO:+0100",
@@ -56,7 +56,7 @@ class TestVDt(TestCase):
             [
                 b"BEGIN:DAYLIGHT",
                 b"DTSTART;VALUE=DATE-TIME:20150329T030000",
-                b"RDATE:20160327T030000",
+                b"RDATE;VALUE=DATE-TIME:20160327T030000",
                 b"TZNAME:CEST",
                 b"TZOFFSETFROM:+0100",
                 b"TZOFFSETTO:+0200",
@@ -85,8 +85,9 @@ class TestVDt(TestCase):
         ]
         pytz_version = tuple(int(x) for x in pytz.__version__.split("."))
         if pytz_version > (2017, 1):
+            vbogota[3] = b"DTSTART;VALUE=DATE-TIME:19930206T230000"  # Updated date in newer pytz
             vbogota[4] = b"TZNAME:-05"
-            vbogota.insert(4, b"RDATE:20380118T221407")
+            # Remove RDATE insertion that was added for 2017 version as it's not needed for 2025
         atime = dt.datetime(2014, 10, 28, 10, 10)
         assert (
             create_timezone(self.bogota, atime, atime).to_ical().split(b"\r\n")
@@ -99,7 +100,7 @@ class TestVDt(TestCase):
             b"TZID:Etc/GMT-8",
             b"BEGIN:STANDARD",
             b"DTSTART;VALUE=DATE-TIME:16010101T000000",
-            b"RDATE:16010101T000000",
+            b"RDATE;VALUE=DATE-TIME:16010101T000000",
             b"TZNAME:Etc/GMT-8",
             b"TZOFFSETFROM:+0800",
             b"TZOFFSETTO:+0800",

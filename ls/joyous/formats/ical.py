@@ -417,10 +417,23 @@ class vDt(vDDDTypes):
                 return pytz.timezone(tzinfo.zone)
             except pytz.exceptions.UnknownTimeZoneError as e:
                 raise CalendarTypeError(str(e)) from e
+        elif getattr(tzinfo, "key", None):
+            # Handle zoneinfo.ZoneInfo objects
+            try:
+                return pytz.timezone(tzinfo.key)
+            except pytz.exceptions.UnknownTimeZoneError as e:
+                raise CalendarTypeError(str(e)) from e
         elif tzinfo is not None:
             return tzinfo
         else:
-            return timezone.get_current_timezone()
+            # Always return pytz timezone for consistency
+            current_tz = timezone.get_current_timezone()
+            if hasattr(current_tz, "zone"):
+                return pytz.timezone(current_tz.zone)
+            elif hasattr(current_tz, "key"):
+                return pytz.timezone(current_tz.key)
+            else:
+                return current_tz
 
 
 class vSmart(vText):

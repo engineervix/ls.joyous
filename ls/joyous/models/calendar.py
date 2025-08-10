@@ -114,7 +114,10 @@ class CalendarPageForm(BorgPageForm):
 DatePictures = {
     "YYYY": r"((?:19|20)\d\d)",
     "MM": r"(1[012]|0?[1-9])",
-    "Mon": r"({})".format("|".join(m.lower()[:3] for m in MONTH_ABBRS[1:])),
+    "Mon": r"({})".format("|".join(sorted(set(
+        [m.lower()[:3] for m in MONTH_ABBRS[1:] if m] + 
+        [m[:3] for m in MONTH_ABBRS[1:] if m]
+    )))),
     "DD": r"(3[01]|[12]\d|0?[1-9])",
     "WW": r"(5[0-3]|[1-4]\d|0?[1-9])",
 }
@@ -186,7 +189,7 @@ class CalendarPage(RoutablePageMixin, Page, metaclass=FormDefender):
         monthAbbr = monthAbbr.lower()
         try:
             # Find the month number (1-12) from the abbreviation
-            month_abbrs_lower = [abbr.lower() for abbr in MONTH_ABBRS[1:]]
+            month_abbrs_lower = [abbr.lower()[:3] for abbr in MONTH_ABBRS[1:]]
             month = month_abbrs_lower.index(monthAbbr) + 1
         except ValueError:
             # If abbreviation not found, let Django handle the 404

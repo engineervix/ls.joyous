@@ -418,6 +418,7 @@ class PageInstanceTests(WagtailPageTests):
                     "time_to": dt.time(10),
                     "tz": pytz.timezone("Pacific/Auckland"),
                     "details": rich_text("<p>Stand up straight!</p>"),
+                    "num_days": 1,
                 }
             ),
         )
@@ -489,6 +490,7 @@ class PageInstanceTests(WagtailPageTests):
                     "postponement_title": "Test Meeting",
                     "date": dt.date(2009, 8, 15),
                     "time_from": dt.time(13),
+                    "num_days": 1,
                 }
             ),
         )

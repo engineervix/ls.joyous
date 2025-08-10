@@ -34,7 +34,8 @@ class Time12hrInput(AdminTimeInput):
 
     def format_value(self, value):
         if isinstance(value, (dt.datetime, dt.time)):
-            return value.strftime("%I:%M%P")  # %P for lower case am/pm
+            formatted = value.strftime("%I:%M%p")  # %p for am/pm 
+            return formatted.lower()  # Convert to lowercase consistently
         else:
             return value
 

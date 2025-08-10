@@ -330,6 +330,7 @@ class TestPageForm(TestCase):
                     "The meeting has been postponed until tomorrow"
                 ),
                 "postponement_title": "Committee Meeting",
+                "num_days": 1,
             },
             instance=page,
             parent_page=self.event,
@@ -351,6 +352,7 @@ class TestPageForm(TestCase):
                     "The meeting has been postponed until tomorrow"
                 ),
                 "postponement_title": "Committee Meeting",
+                "num_days": 1,
             },
             instance=page,
             parent_page=self.event,
