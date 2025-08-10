@@ -98,7 +98,7 @@ USE_I18N = True
 USE_TZ = True
 
 WAGTAIL_SITE_NAME = "Testing"
-BASE_URL = "http://joy.test"
+WAGTAILADMIN_BASE_URL = "http://joy.test"
 ALLOWED_HOSTS = ["joy.test", ".joy.test", ".localhost", "127.0.0.1", "[::1]"]
 
 JOYOUS_HOLIDAYS = "NZ[*]"
