@@ -13,6 +13,7 @@ class ProxyPageMixin:
     the manager, but peers() will return a queryset of others of the same type.
     See also https://github.com/wagtail/wagtail/pull/1736
     """
+
     class Meta:
         proxy = True
 
@@ -21,7 +22,7 @@ class ProxyPageMixin:
         self._initContentType()
 
     def _initContentType(self):
-        if getattr(self, 'id', object()) is None:
+        if getattr(self, "id", object()) is None:
             self.content_type = self._getContentType()
 
     @classmethod
@@ -32,6 +33,7 @@ class ProxyPageMixin:
     @classmethod
     def _getContentType(cls):
         return ContentType.objects.get_for_model(cls, for_concrete_model=False)
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

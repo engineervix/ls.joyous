@@ -3,24 +3,26 @@
 from django.db import migrations
 from uuid import uuid4
 
+
 def populate(model):
     def gen_uid(apps, schema_editor):
         Model = apps.get_model("joyous", model)
         for row in Model.objects.all():
             row.uid = uuid4()
             row.save(update_fields=["uid"])
+
     return gen_uid
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0007_add_uid'),
+        ("joyous", "0007_add_uid"),
     ]
 
     operations = [
-        migrations.RunPython(populate("MultidayEventPage"),  migrations.RunPython.noop),
-        migrations.RunPython(populate("PostponementPage"),   migrations.RunPython.noop),
+        migrations.RunPython(populate("MultidayEventPage"), migrations.RunPython.noop),
+        migrations.RunPython(populate("PostponementPage"), migrations.RunPython.noop),
         migrations.RunPython(populate("RecurringEventPage"), migrations.RunPython.noop),
-        migrations.RunPython(populate("SimpleEventPage"),    migrations.RunPython.noop),
+        migrations.RunPython(populate("SimpleEventPage"), migrations.RunPython.noop),
     ]

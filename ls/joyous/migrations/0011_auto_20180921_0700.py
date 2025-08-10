@@ -7,13 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0010_auto_20180920_1210'),
+        ("joyous", "0010_auto_20180920_1210"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='grouppage',
-            name='page_ptr',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, related_name='joyous_grouppage', serialize=False, to='wagtailcore.Page'),
+            model_name="grouppage",
+            name="page_ptr",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                parent_link=True,
+                primary_key=True,
+                related_name="joyous_grouppage",
+                serialize=False,
+                to="wagtailcore.Page",
+            ),
         ),
     ]

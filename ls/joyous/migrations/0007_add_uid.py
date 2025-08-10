@@ -7,28 +7,52 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0006_generalcalendarpage_specificcalendarpage'),
+        ("joyous", "0006_generalcalendarpage_specificcalendarpage"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='multidayeventpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=True),
+            model_name="multidayeventpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='postponementpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=True),
+            model_name="postponementpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='recurringeventpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=True),
+            model_name="recurringeventpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='simpleeventpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=True),
+            model_name="simpleeventpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=True,
+            ),
         ),
     ]

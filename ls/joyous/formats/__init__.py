@@ -1,8 +1,8 @@
 # ------------------------------------------------------------------------------
-from .null   import NullHandler
-from .ical   import ICalHandler
+from .null import NullHandler
+from .ical import ICalHandler
 from .google import GoogleCalendarHandler
-from .rss    import RssHandler
+from .rss import RssHandler
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

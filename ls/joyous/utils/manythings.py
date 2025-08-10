@@ -6,6 +6,7 @@ from django.utils.translation import to_locale
 from django.utils.translation import gettext as _, gettext_noop
 from num2words import num2words
 
+
 # ------------------------------------------------------------------------------
 def _n2w(n, to):
     try:
@@ -18,6 +19,7 @@ def _n2w(n, to):
         gettext_noop("fourth")
         gettext_noop("fifth")
         return _(num2words(n, lang="en", to=to))
+
 
 # ------------------------------------------------------------------------------
 def toOrdinal(n):
@@ -34,6 +36,7 @@ def toOrdinal(n):
     else:
         retval = _n2w(n, to="ordinal_num")
     return retval
+
 
 # ------------------------------------------------------------------------------
 def toTheOrdinal(n, inTitleCase=True):
@@ -60,11 +63,12 @@ def toTheOrdinal(n, inTitleCase=True):
         retval = _("the")
         if inTitleCase:
             retval = retval.capitalize()
-        retval += " "+_n2w(n, to="ordinal_num")
+        retval += " " + _n2w(n, to="ordinal_num")
         return retval
     if inTitleCase:
         retval = retval.capitalize()
     return retval
+
 
 # ------------------------------------------------------------------------------
 def toDaysOffsetStr(offset):
@@ -81,17 +85,19 @@ def toDaysOffsetStr(offset):
         retval = _("{N} days after").format(N=n.capitalize())
     return retval
 
+
 # ------------------------------------------------------------------------------
 def hrJoin(items):
     """
     Joins items together in a human readable string
     e.g. 'wind, ice and fire'
     """
-    conjuction = " "+_("and")+" "
+    conjuction = " " + _("and") + " "
     if len(items) <= 2:
         return conjuction.join(items)
     else:
         return ", ".join(items[:-1]) + conjuction + items[-1]
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

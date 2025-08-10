@@ -9,23 +9,40 @@ import ls.joyous.utils.mixins
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0011_auto_20180921_0700'),
+        ("joyous", "0011_auto_20180921_0700"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MultidayRecurringEventPage',
+            name="MultidayRecurringEventPage",
             fields=[
-                ('recurringeventpage_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='joyous.RecurringEventPage')),
+                (
+                    "recurringeventpage_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="joyous.RecurringEventPage",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Multiday Recurring Event Page',
+                "verbose_name": "Multiday Recurring Event Page",
             },
-            bases=(ls.joyous.utils.mixins.ProxyPageMixin, 'joyous.recurringeventpage'),
+            bases=(ls.joyous.utils.mixins.ProxyPageMixin, "joyous.recurringeventpage"),
         ),
         migrations.AddField(
-            model_name='recurringeventpage',
-            name='num_days',
-            field=models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(99)], verbose_name='Number of days'),
+            model_name="recurringeventpage",
+            name="num_days",
+            field=models.IntegerField(
+                default=1,
+                validators=[
+                    django.core.validators.MinValueValidator(1),
+                    django.core.validators.MaxValueValidator(99),
+                ],
+                verbose_name="Number of days",
+            ),
         ),
     ]

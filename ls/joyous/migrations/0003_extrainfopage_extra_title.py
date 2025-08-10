@@ -8,13 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0002_auto_20180228_1449'),
+        ("joyous", "0002_auto_20180228_1449"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='extrainfopage',
-            name='extra_title',
-            field=models.CharField(blank=True, help_text='A more specific title for this occurence (optional)', max_length=255, verbose_name='Title'),
+            model_name="extrainfopage",
+            name="extra_title",
+            field=models.CharField(
+                blank=True,
+                help_text="A more specific title for this occurence (optional)",
+                max_length=255,
+                verbose_name="Title",
+            ),
         ),
     ]

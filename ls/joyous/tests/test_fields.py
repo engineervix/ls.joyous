@@ -1,23 +1,27 @@
 # ------------------------------------------------------------------------------
 # Test Fields
 # ------------------------------------------------------------------------------
-import sys
 import datetime as dt
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db import connection, models
 from ls.joyous.utils.recurrence import Recurrence
-from ls.joyous.utils.recurrence import YEARLY, WEEKLY, MONTHLY
-from ls.joyous.utils.recurrence import MO, TU, WE, TH, FR, SA, SU
-from ls.joyous.fields import (RecurrenceField, RecurrenceFormField,
-                              MultipleSelectField, MultipleSelectFormField)
-from .testutils import datetimetz, freeze_timetz, getPage
+from ls.joyous.utils.recurrence import MONTHLY
+from ls.joyous.utils.recurrence import MO
+from ls.joyous.fields import (
+    RecurrenceField,
+    RecurrenceFormField,
+    MultipleSelectField,
+    MultipleSelectFormField,
+)
+
 
 # ------------------------------------------------------------------------------
 class TestRecurrenceField(TestCase):
     def setUp(self):
-        self.rr = Recurrence(dtstart=dt.date(2011, 12, 13),
-                             freq=MONTHLY, byweekday=MO(1))
+        self.rr = Recurrence(
+            dtstart=dt.date(2011, 12, 13), freq=MONTHLY, byweekday=MO(1)
+        )
         self.ical = "DTSTART:20111213\nRRULE:FREQ=MONTHLY;WKST=SU;BYDAY=+1MO"
 
     def testInit(self):
@@ -47,21 +51,18 @@ class TestRecurrenceField(TestCase):
 
     def testGetPrepValue(self):
         field = RecurrenceField()
-        self.assertEqual(field.get_prep_value(self.rr),
-                         self.ical)
+        self.assertEqual(field.get_prep_value(self.rr), self.ical)
 
     def testGetPrepLookup(self):
         field = RecurrenceField()
         with self.assertRaises(TypeError):
             field.get_prep_lookup("exact", self.rr)
 
+
 # ------------------------------------------------------------------------------
 class TestMultipleSelectField(TestCase):
     def setUp(self):
-        self.choices = [('A', "Dawn"),
-                        ('B', "Day"),
-                        ('C', "Dusk"),
-                        ('D', "Night")]
+        self.choices = [("A", "Dawn"), ("B", "Day"), ("C", "Dusk"), ("D", "Night")]
         self.opts = ["B", "C", "D"]
         self.strval = "B,C,D"
 
@@ -79,7 +80,7 @@ class TestMultipleSelectField(TestCase):
         self.assertEqual(name, "attention")
         self.assertEqual(path, "ls.joyous.fields.MultipleSelectField")
         self.assertEqual(args, [])
-        self.assertEqual(kwargs, {'choices': self.choices})
+        self.assertEqual(kwargs, {"choices": self.choices})
 
     def testToPython(self):
         field = MultipleSelectField(choices=self.choices)
@@ -108,7 +109,9 @@ class TestMultipleSelectField(TestCase):
         class Foo(models.Model):
             class Meta:
                 app_label = "foo"
+
             field = MultipleSelectField(choices=self.choices)
+
         self.assertTrue(hasattr(Foo, "get_field_display"))
         foo = Foo(field="A")
         self.assertEqual(foo.get_field_display(), "Dawn")

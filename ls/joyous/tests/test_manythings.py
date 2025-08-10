@@ -1,13 +1,10 @@
 # ------------------------------------------------------------------------------
 # Test Many Things Utilities
 # ------------------------------------------------------------------------------
-import sys
-import datetime as dt
-import pytz
 from django.test import TestCase
 from django.utils import translation
-from ls.joyous.utils.manythings import (toOrdinal, toTheOrdinal,
-                                        toDaysOffsetStr, hrJoin)
+from ls.joyous.utils.manythings import toOrdinal, toTheOrdinal, toDaysOffsetStr, hrJoin
+
 
 # ------------------------------------------------------------------------------
 class Test(TestCase):
@@ -61,15 +58,16 @@ class Test(TestCase):
         self.assertEqual(hrJoin([""]), "")
         self.assertEqual(hrJoin(["ice"]), "ice")
         self.assertEqual(hrJoin(["ice", "fire"]), "ice and fire")
-        self.assertEqual(hrJoin(["wind", "ice", "fire"]),
-                         "wind, ice and fire")
-        self.assertEqual(hrJoin(["dog", "cat", "hen", "yak", "ant"]),
-                         "dog, cat, hen, yak and ant")
+        self.assertEqual(hrJoin(["wind", "ice", "fire"]), "wind, ice and fire")
+        self.assertEqual(
+            hrJoin(["dog", "cat", "hen", "yak", "ant"]), "dog, cat, hen, yak and ant"
+        )
+
 
 # ------------------------------------------------------------------------------
-class  TestFrançais(TestCase):
+class TestFrançais(TestCase):
     def setUp(self):
-        translation.activate('fr')
+        translation.activate("fr")
 
     def tearDown(self):
         translation.deactivate()
@@ -77,11 +75,11 @@ class  TestFrançais(TestCase):
     def testToOrdinal(self):
         self.assertEqual(toOrdinal(-1), "dernier")
         self.assertEqual(toOrdinal(-2), "avant-dernier")
-        self.assertEqual(toOrdinal (1), "premier")
-        self.assertEqual(toOrdinal (2), "deuxième")
-        self.assertEqual(toOrdinal (3), "troisième")
-        self.assertEqual(toOrdinal (4), "quatrième")
-        self.assertEqual(toOrdinal (5), "cinquième")
+        self.assertEqual(toOrdinal(1), "premier")
+        self.assertEqual(toOrdinal(2), "deuxième")
+        self.assertEqual(toOrdinal(3), "troisième")
+        self.assertEqual(toOrdinal(4), "quatrième")
+        self.assertEqual(toOrdinal(5), "cinquième")
 
     def testToOrdinalNum(self):
         self.assertEqual(toOrdinal(6), "6me")
@@ -123,17 +121,19 @@ class  TestFrançais(TestCase):
 
     def testHumanReadableJoin(self):
         self.assertEqual(hrJoin([""]), "")
-        self.assertEqual(hrJoin (["glace"]), "glace")
-        self.assertEqual(hrJoin (["glace", "feu"]), "glace et feu")
-        self.assertEqual(hrJoin (["vent", "glace", "feu"]),
-                         "vent, glace et feu")
-        self.assertEqual(hrJoin (["chien", "chat", "poule", "yak", "fourmi"]),
-                         "chien, chat, poule, yak et fourmi")
+        self.assertEqual(hrJoin(["glace"]), "glace")
+        self.assertEqual(hrJoin(["glace", "feu"]), "glace et feu")
+        self.assertEqual(hrJoin(["vent", "glace", "feu"]), "vent, glace et feu")
+        self.assertEqual(
+            hrJoin(["chien", "chat", "poule", "yak", "fourmi"]),
+            "chien, chat, poule, yak et fourmi",
+        )
+
 
 # ------------------------------------------------------------------------------
-class  TestΕλληνικά(TestCase):
+class TestΕλληνικά(TestCase):
     def setUp(self):
-        translation.activate('el')
+        translation.activate("el")
 
     def tearDown(self):
         translation.deactivate()
@@ -141,11 +141,12 @@ class  TestΕλληνικά(TestCase):
     def testToOrdinal(self):
         self.assertEqual(toOrdinal(-1), "τελευταίος")
         self.assertEqual(toOrdinal(-2), "προτελευταία")
-        self.assertEqual(toOrdinal (1), "τελευταίο")
-        self.assertEqual(toOrdinal (2), "προτελευταία")
-        self.assertEqual(toOrdinal (3), "πρώτη")
-        self.assertEqual(toOrdinal (4), "δεύτερη")
-        self.assertEqual(toOrdinal (5), "τρίτη")
+        self.assertEqual(toOrdinal(1), "τελευταίο")
+        self.assertEqual(toOrdinal(2), "προτελευταία")
+        self.assertEqual(toOrdinal(3), "πρώτη")
+        self.assertEqual(toOrdinal(4), "δεύτερη")
+        self.assertEqual(toOrdinal(5), "τρίτη")
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

@@ -1,15 +1,15 @@
 # ------------------------------------------------------------------------------
 # Test App
 # ------------------------------------------------------------------------------
-import sys
 from django.test import TestCase
 import ls.joyous
+
 
 # ------------------------------------------------------------------------------
 class Test(TestCase):
     def test(self):
-        self.assertEqual(ls.joyous.default_app_config,
-                         "ls.joyous.apps.JoyousAppConfig")
+        self.assertEqual(ls.joyous.default_app_config, "ls.joyous.apps.JoyousAppConfig")
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 # ------------------------------------------------------------------------------
 # Joyous Fields
 # ------------------------------------------------------------------------------
-import sys
 from django.db.models import Field
 from django.core.exceptions import ValidationError
 from django.forms.fields import Field as FormField
@@ -10,11 +9,13 @@ from django.utils.encoding import force_str
 from .utils.recurrence import Recurrence
 from .widgets import RecurrenceWidget
 
+
 # ------------------------------------------------------------------------------
 class RecurrenceField(Field):
     """
     DB Field for recurrences
     """
+
     description = "The rule for recurring events"
 
     def __init__(self, *args, **kwargs):
@@ -48,19 +49,21 @@ class RecurrenceField(Field):
 
     def get_prep_lookup(self, lookup_type, value):
         """Sorry recurrences cannot be used in where clauses"""
-        raise TypeError('Lookup type %r not supported.' % lookup_type)
+        raise TypeError("Lookup type %r not supported." % lookup_type)
 
     def formfield(self, **kwargs):
-        defaults = {'form_class': RecurrenceFormField}
+        defaults = {"form_class": RecurrenceFormField}
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
     def get_internal_type(self):
         return "CharField"
 
+
 # ------------------------------------------------------------------------------
 class RecurrenceFormField(FormField):
     widget = RecurrenceWidget
+
 
 # ------------------------------------------------------------------------------
 class MultipleSelectField(Field):
@@ -74,6 +77,7 @@ class MultipleSelectField(Field):
     Default widget is forms.CheckboxSelectMultiple
     Python value: list of values
     """
+
     # See also https://github.com/goinnn/django-multiselectfield
     def __init__(self, *args, **kwargs):
         kwargs["max_length"] = 255
@@ -105,20 +109,24 @@ class MultipleSelectField(Field):
 
     def get_prep_lookup(self, lookup_type, value):
         """Sorry multiselects cannot be used in where clauses"""
-        raise TypeError('Lookup type %r not supported.' % lookup_type)
+        raise TypeError("Lookup type %r not supported." % lookup_type)
 
     def _coerceChoice(self, choice):
         options = [option[0] for option in self.choices]
         if choice not in options:
-            raise ValidationError(self.error_messages['invalid_choice'],
-                                  code='invalid_choice',
-                                  params={'value': choice})
+            raise ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": choice},
+            )
         return choice
 
     def formfield(self, **kwargs):
-        defaults = {'choices_form_class': MultipleSelectFormField,
-                    'choices':            self.choices,
-                    'coerce':             self._coerceChoice}
+        defaults = {
+            "choices_form_class": MultipleSelectFormField,
+            "choices": self.choices,
+            "coerce": self._coerceChoice,
+        }
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
@@ -130,27 +138,30 @@ class MultipleSelectField(Field):
             return
 
         if value is None and not self.null:
-            raise ValidationError(self.error_messages['null'], code='null')
+            raise ValidationError(self.error_messages["null"], code="null")
 
         if not self.blank and value in self.empty_values:
-            raise ValidationError(self.error_messages['blank'], code='blank')
+            raise ValidationError(self.error_messages["blank"], code="blank")
 
     def contribute_to_class(self, cls, name, private_only=False):
         super().contribute_to_class(cls, name)
         if self.choices:
             fieldname = self.name
             choicedict = dict(self.choices)
+
             def func(self):
                 value = getattr(self, fieldname)
                 if not isinstance(value, list):
                     value = [value]
-                return ", ".join([force_str(choicedict.get(i, i))
-                                  for i in value])
-            setattr(cls, 'get_%s_display' % fieldname, func)
+                return ", ".join([force_str(choicedict.get(i, i)) for i in value])
+
+            setattr(cls, "get_%s_display" % fieldname, func)
+
 
 # ------------------------------------------------------------------------------
 class MultipleSelectFormField(TypedMultipleChoiceField):
     widget = CheckboxSelectMultiple
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

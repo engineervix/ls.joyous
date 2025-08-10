@@ -7,12 +7,14 @@ from collections import defaultdict, OrderedDict
 from django.conf import settings
 from .parser import parseHolidays
 
+
 class Holidays:
     """Defines what holidays are celebrated on what dates."""
+
     def __init__(self, holidaySetting="JOYOUS_HOLIDAYS"):
         self.setting = holidaySetting
         self.simple = {}
-        self.srcs = [ self.simple ]
+        self.srcs = [self.simple]
         self._parseSettings()
 
     def __add__(self, other):
@@ -56,7 +58,7 @@ class Holidays:
             holiday = getHoliday(date)
             if holiday:
                 holidays.extend(holiday.split(", "))
-        holidays = list(OrderedDict.fromkeys(holidays))   # remove duplicates
+        holidays = list(OrderedDict.fromkeys(holidays))  # remove duplicates
         return ", ".join(holidays)
 
     def names(self):
@@ -88,18 +90,21 @@ class Holidays:
 
         # sort holidays by month-day with a preference for a more recent year
         mmddHolidays = []
+
         def moreRecent(date):
             delta2 = (date.year - thisYear) * 2
             if delta2 < 0:
                 # slight preference for future years over past years
                 delta2 = -delta2 + 1
             return delta2
+
         for name, dates in holidays.items():
             mostRecent = min(dates, key=moreRecent)
             mmddHolidays.append(((mostRecent.month, mostRecent.day), name))
         mmddHolidays.sort()
         retval = [name for mmdd, name in mmddHolidays]
         return retval
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

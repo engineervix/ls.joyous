@@ -26,16 +26,18 @@ import datetime as dt
 import icalendar
 import pytz
 
+
 def to_naive_utc(dtime):
     """convert a datetime object to UTC and than remove the tzinfo, if
     datetime is naive already, return it
     """
-    if not hasattr(dtime, 'tzinfo') or dtime.tzinfo is None:
+    if not hasattr(dtime, "tzinfo") or dtime.tzinfo is None:
         return dtime
 
     dtime_utc = dtime.astimezone(pytz.UTC)
     dtime_naive = dtime_utc.replace(tzinfo=None)
     return dtime_naive
+
 
 def create_timezone(tz, first_date=None, last_date=None):
     """
@@ -72,7 +74,7 @@ def create_timezone(tz, first_date=None, last_date=None):
     first_date = dt.datetime.today() if not first_date else to_naive_utc(first_date)
     last_date = dt.datetime.today() if not last_date else to_naive_utc(last_date)
     timezone = icalendar.Timezone()
-    timezone.add('TZID', tz)
+    timezone.add("TZID", tz)
 
     # This is not a reliable way of determining if a transition is for
     # daylight savings.
@@ -110,11 +112,10 @@ def create_timezone(tz, first_date=None, last_date=None):
         name = tz._transition_info[num][2]
         if name in timezones:
             ttime = tz.fromutc(tz._utc_transition_times[num]).replace(tzinfo=None)
-            if 'RDATE' in timezones[name]:
-                timezones[name]['RDATE'].dts.append(
-                    icalendar.prop.vDDDTypes(ttime))
+            if "RDATE" in timezones[name]:
+                timezones[name]["RDATE"].dts.append(icalendar.prop.vDDDTypes(ttime))
             else:
-                timezones[name].add('RDATE', ttime)
+                timezones[name].add("RDATE", ttime)
             continue
 
         if tz._transition_info[num][1]:
@@ -122,12 +123,12 @@ def create_timezone(tz, first_date=None, last_date=None):
         else:
             subcomp = icalendar.TimezoneStandard()
 
-        subcomp.add('TZNAME', tz._transition_info[num][2])
+        subcomp.add("TZNAME", tz._transition_info[num][2])
         subcomp.add(
-            'DTSTART',
-            tz.fromutc(tz._utc_transition_times[num]).replace(tzinfo=None))
-        subcomp.add('TZOFFSETTO', tz._transition_info[num][0])
-        subcomp.add('TZOFFSETFROM', tz._transition_info[num - 1][0])
+            "DTSTART", tz.fromutc(tz._utc_transition_times[num]).replace(tzinfo=None)
+        )
+        subcomp.add("TZOFFSETTO", tz._transition_info[num][0])
+        subcomp.add("TZOFFSETFROM", tz._transition_info[num - 1][0])
         timezones[name] = subcomp
 
     for subcomp in timezones.values():
@@ -145,12 +146,12 @@ def _create_timezone_static(tz):
     :rtype: icalendar.Timezone()
     """
     timezone = icalendar.Timezone()
-    timezone.add('TZID', tz)
+    timezone.add("TZID", tz)
     subcomp = icalendar.TimezoneStandard()
-    subcomp.add('TZNAME', tz)
-    subcomp.add('DTSTART', dt.datetime(1601, 1, 1))
-    subcomp.add('RDATE', dt.datetime(1601, 1, 1))
-    subcomp.add('TZOFFSETTO', tz._utcoffset)
-    subcomp.add('TZOFFSETFROM', tz._utcoffset)
+    subcomp.add("TZNAME", tz)
+    subcomp.add("DTSTART", dt.datetime(1601, 1, 1))
+    subcomp.add("RDATE", dt.datetime(1601, 1, 1))
+    subcomp.add("TZOFFSETTO", tz._utcoffset)
+    subcomp.add("TZOFFSETFROM", tz._utcoffset)
     timezone.add_component(subcomp)
     return timezone

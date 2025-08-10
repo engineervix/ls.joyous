@@ -6,28 +6,26 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0005_auto_20180522_1158'),
+        ("joyous", "0005_auto_20180522_1158"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GeneralCalendarPage',
-            fields=[
-            ],
+            name="GeneralCalendarPage",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
+                "proxy": True,
+                "indexes": [],
             },
-            bases=('joyous.calendarpage',),
+            bases=("joyous.calendarpage",),
         ),
         migrations.CreateModel(
-            name='SpecificCalendarPage',
-            fields=[
-            ],
+            name="SpecificCalendarPage",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
+                "proxy": True,
+                "indexes": [],
             },
-            bases=('joyous.calendarpage',),
+            bases=("joyous.calendarpage",),
         ),
     ]

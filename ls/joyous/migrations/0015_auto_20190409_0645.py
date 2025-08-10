@@ -8,51 +8,56 @@ import ls.joyous.utils.mixins
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wagtailcore', '0040_page_draft_title'),
-        ('wagtailredirects', '0006_redirect_increase_max_length'),
-        ('wagtailforms', '0003_capitalizeverbose'),
-        ('joyous', '0014_auto_20190328_0652'),
+        ("wagtailcore", "0040_page_draft_title"),
+        ("wagtailredirects", "0006_redirect_increase_max_length"),
+        ("wagtailforms", "0003_capitalizeverbose"),
+        ("joyous", "0014_auto_20190328_0652"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='RescheduleMultidayEventPage',
-            fields=[
-            ],
+            name="RescheduleMultidayEventPage",
+            fields=[],
             options={
-                'indexes': [],
-                'verbose_name_plural': 'postponements',
-                'proxy': True,
-                'verbose_name': 'postponement',
+                "indexes": [],
+                "verbose_name_plural": "postponements",
+                "proxy": True,
+                "verbose_name": "postponement",
             },
-            bases=(ls.joyous.utils.mixins.ProxyPageMixin, 'joyous.postponementpage'),
+            bases=(ls.joyous.utils.mixins.ProxyPageMixin, "joyous.postponementpage"),
         ),
         migrations.RemoveField(
-            model_name='postponementpage',
-            name='group_page',
+            model_name="postponementpage",
+            name="group_page",
         ),
         migrations.RemoveField(
-            model_name='postponementpage',
-            name='uid',
+            model_name="postponementpage",
+            name="uid",
         ),
         migrations.AddField(
-            model_name='postponementpage',
-            name='num_days',
-            field=models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(99)], verbose_name='number of days'),
+            model_name="postponementpage",
+            name="num_days",
+            field=models.IntegerField(
+                default=1,
+                validators=[
+                    django.core.validators.MinValueValidator(1),
+                    django.core.validators.MaxValueValidator(99),
+                ],
+                verbose_name="number of days",
+            ),
         ),
         migrations.DeleteModel(
-            name='MultidayRecurringEventPage',
+            name="MultidayRecurringEventPage",
         ),
         migrations.CreateModel(
-            name='MultidayRecurringEventPage',
-            fields=[
-            ],
+            name="MultidayRecurringEventPage",
+            fields=[],
             options={
-                'indexes': [],
-                'verbose_name_plural': 'multiday recurring event pages',
-                'proxy': True,
-                'verbose_name': 'multiday recurring event page',
+                "indexes": [],
+                "verbose_name_plural": "multiday recurring event pages",
+                "proxy": True,
+                "verbose_name": "multiday recurring event page",
             },
-            bases=(ls.joyous.utils.mixins.ProxyPageMixin, 'joyous.recurringeventpage'),
+            bases=(ls.joyous.utils.mixins.ProxyPageMixin, "joyous.recurringeventpage"),
         ),
     ]

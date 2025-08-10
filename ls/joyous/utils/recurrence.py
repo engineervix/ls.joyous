@@ -9,9 +9,7 @@
 #   https://github.com/django-recurrence/django-recurrence
 #   https://github.com/dakrauth/django-swingtime
 
-import sys
 from operator import attrgetter
-import calendar
 import datetime as dt
 from dateutil.rrule import rrule, rrulestr, rrulebase
 from dateutil.rrule import DAILY, WEEKLY, MONTHLY, YEARLY
@@ -19,8 +17,8 @@ from dateutil.rrule import weekday as rrweekday
 from django.utils.translation import gettext as _
 from .telltime import dateShortFormat
 from .manythings import toOrdinal, toTheOrdinal, toDaysOffsetStr, hrJoin
-from .names import (WEEKDAY_NAMES, WEEKDAY_NAMES_PLURAL,
-                    MONTH_NAMES, WRAPPED_MONTH_NAMES)
+from .names import WEEKDAY_NAMES, WEEKDAY_NAMES_PLURAL, MONTH_NAMES, WRAPPED_MONTH_NAMES
+
 
 # ------------------------------------------------------------------------------
 class Weekday(rrweekday):
@@ -28,6 +26,7 @@ class Weekday(rrweekday):
     Represents a day of the week, for every occurence of the week
     or for a specific week in the period.  e.g. The first Friday of the month.
     """
+
     def __repr__(self):
         s = ("MO", "TU", "WE", "TH", "FR", "SA", "SU")[self.weekday]
         if not self.n:
@@ -53,16 +52,20 @@ class Weekday(rrweekday):
         else:
             theOrdinal = toTheOrdinal(self.n, inTitleCase=False)
             if offset < 0:
-                return _("{localWeekday} before "
-                         "{theOrdinal} {weekday}").format(**locals())
+                return _("{localWeekday} before " "{theOrdinal} {weekday}").format(
+                    **locals()
+                )
             else:
-                return _("{localWeekday} after "
-                         "{theOrdinal} {weekday}").format(**locals())
+                return _("{localWeekday} after " "{theOrdinal} {weekday}").format(
+                    **locals()
+                )
 
     def _getPluralWhen(self, offset):
         return self._getWhen(offset, WEEKDAY_NAMES_PLURAL)
 
+
 MO, TU, WE, TH, FR, SA, SU = EVERYWEEKDAY = map(Weekday, range(7))
+
 
 # ------------------------------------------------------------------------------
 class Recurrence(rrulebase):
@@ -74,6 +77,7 @@ class Recurrence(rrulebase):
     Does not support timezones ... and probably never will.
     Does not support a frequency of by-hour, by-minute or by-second.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__()
         arg0 = args[0] if len(args) else None
@@ -205,21 +209,23 @@ class Recurrence(rrulebase):
         theirUntil = their._until
         if theirUntil is not None:
             theirUntil = theirUntil.date()
-        return (my._freq        == their._freq        and
-                my._interval    == their._interval    and
-                my._count       == their._count       and
-                my._byweekno    == their._byweekno    and
-                my._byyearday   == their._byyearday   and
-                my._byeaster    == their._byeaster    and
-                my._bysetpos    == their._bysetpos    and
-                self.dtstart    == theirDtstart       and
-                self.until      == theirUntil         and
-                my._wkst        == their._wkst        and
-                my._byweekday   == their._byweekday   and
-                my._bynweekday  == their._bynweekday  and
-                my._bymonthday  == their._bymonthday  and
-                my._bynmonthday == their._bynmonthday and
-                my._bymonth     == their._bymonth)
+        return (
+            my._freq == their._freq
+            and my._interval == their._interval
+            and my._count == their._count
+            and my._byweekno == their._byweekno
+            and my._byyearday == their._byyearday
+            and my._byeaster == their._byeaster
+            and my._bysetpos == their._bysetpos
+            and self.dtstart == theirDtstart
+            and self.until == theirUntil
+            and my._wkst == their._wkst
+            and my._byweekday == their._byweekday
+            and my._bynweekday == their._bynweekday
+            and my._bymonthday == their._bymonthday
+            and my._bynmonthday == their._bynmonthday
+            and my._bymonth == their._bymonth
+        )
 
     def __repr__(self):
         dtstart = ""
@@ -244,15 +250,16 @@ class Recurrence(rrulebase):
             parts.append("UNTIL={:%Y%m%dT%H%M%SZ}".format(untilDt))
         elif self.until:
             parts.append("UNTIL={:%Y%m%d}".format(self.until))
-        for name, value in [('BYSETPOS',   self.bysetpos),
-                            ('BYDAY',      self.byweekday),
-                            ('BYMONTH',    self.bymonth),
-                            ('BYMONTHDAY', self.bymonthday),
-                            ('BYYEARDAY',  self.byyearday),
-                            ('BYWEEKNO',   self.byweekno)]:
+        for name, value in [
+            ("BYSETPOS", self.bysetpos),
+            ("BYDAY", self.byweekday),
+            ("BYMONTH", self.bymonth),
+            ("BYMONTHDAY", self.bymonthday),
+            ("BYYEARDAY", self.byyearday),
+            ("BYWEEKNO", self.byweekno),
+        ]:
             if value:
-                parts.append("{}={}".format(name,
-                                            ",".join(repr(v) for v in value)))
+                parts.append("{}={}".format(name, ",".join(repr(v) for v in value)))
         return ";".join(parts)
 
     def __str__(self):
@@ -273,10 +280,10 @@ class Recurrence(rrulebase):
             retval = self.__getYearlyWhen(offset)
 
         if numDays >= 2:
-            retval += " "+_("for {n} days").format(n=numDays)
+            retval += " " + _("for {n} days").format(n=numDays)
         if self.until:
             until = self.until + dt.timedelta(days=offset)
-            retval += " "+_("(until {when})").format(when=dateShortFormat(until))
+            retval += " " + _("(until {when})").format(when=dateShortFormat(until))
         return retval
 
     def __getDailyWhen(self):
@@ -291,25 +298,22 @@ class Recurrence(rrulebase):
         if self.interval == 2:
             retval = _("Fortnightly on {days}").format(days=retval)
         elif self.interval > 2:
-            retval = _("Every {n} weeks on {days}").format(n=self.interval,
-                                                           days=retval)
+            retval = _("Every {n} weeks on {days}").format(n=self.interval, days=retval)
         return retval
 
     def __getMonthlyWhen(self, offset):
-        of = " "+_("of the month")
+        of = " " + _("of the month")
         retval = self.__getMonthlyYearlyWhen(offset, of)
         if self.interval >= 2:
-            retval = _("{when}, every {n} months")  \
-                     .format(when=retval, n=self.interval)
+            retval = _("{when}, every {n} months").format(when=retval, n=self.interval)
         return retval
 
     def __getYearlyWhen(self, offset):
         months = hrJoin([MONTH_NAMES[m] for m in self.bymonth])
-        of = " "+_("of {months}").format(months=months)
+        of = " " + _("of {months}").format(months=months)
         retval = self.__getMonthlyYearlyWhen(offset, of)
         if self.interval >= 2:
-            retval = _("{when}, every {n} years")   \
-                         .format(when=retval, n=self.interval)
+            retval = _("{when}, every {n} years").format(when=retval, n=self.interval)
         return retval
 
     def __getMonthlyYearlyWhen(self, offset, of):
@@ -324,8 +328,7 @@ class Recurrence(rrulebase):
         return retval
 
     def __getWhenByWeekday(self, offset, of):
-        if (len(self.byweekday) == 7 and
-            all(not day.n for day in self.byweekday)):
+        if len(self.byweekday) == 7 and all(not day.n for day in self.byweekday):
             retval = _("Everyday")
         else:
             retval = hrJoin([d._getWhen(offset) for d in self.byweekday])
@@ -343,15 +346,15 @@ class Recurrence(rrulebase):
             # bump first day to previous month
             d = offset
             if self.freq != MONTHLY:
-                months = [WRAPPED_MONTH_NAMES[m-1] for m in self.bymonth]
-                of = " "+_("of {months}").format(months=hrJoin(months))
+                months = [WRAPPED_MONTH_NAMES[m - 1] for m in self.bymonth]
+                of = " " + _("of {months}").format(months=hrJoin(months))
 
         elif d == -1 and offset > 0:
             # bump last day to next month
             d = offset
             if self.freq != MONTHLY:
-                months = [WRAPPED_MONTH_NAMES[m+1] for m in self.bymonth]
-                of = " "+_("of {months}").format(months=hrJoin(months))
+                months = [WRAPPED_MONTH_NAMES[m + 1] for m in self.bymonth]
+                of = " " + _("of {months}").format(months=hrJoin(months))
 
         elif 0 < d + offset <= 28:
             # adjust within the month
@@ -363,8 +366,9 @@ class Recurrence(rrulebase):
 
         theOrdinal = toTheOrdinal(d, inTitleCase=False)
         if daysOffset:
-            retval = _("{DaysOffset} {theOrdinal} day")  \
-                     .format(DaysOffset=daysOffset, theOrdinal=theOrdinal)
+            retval = _("{DaysOffset} {theOrdinal} day").format(
+                DaysOffset=daysOffset, theOrdinal=theOrdinal
+            )
         else:
             TheOrdinal = theOrdinal[0].upper() + theOrdinal[1:]
             retval = _("{TheOrdinal} day").format(TheOrdinal=TheOrdinal)
@@ -374,14 +378,15 @@ class Recurrence(rrulebase):
     def __getWhenWithOffsetMonthdays(self, offset, of):
         theOrdinal = hrJoin([toTheOrdinal(d, False) for d in self.bymonthday])
         if offset != 0:
-             retval = _("{DaysOffset} {theOrdinal} day")  \
-                      .format(DaysOffset=toDaysOffsetStr(offset),
-                              theOrdinal=theOrdinal)
+            retval = _("{DaysOffset} {theOrdinal} day").format(
+                DaysOffset=toDaysOffsetStr(offset), theOrdinal=theOrdinal
+            )
         else:
-             TheOrdinal = theOrdinal[0].upper() + theOrdinal[1:]
-             retval = _("{TheOrdinal} day").format(TheOrdinal=TheOrdinal)
+            TheOrdinal = theOrdinal[0].upper() + theOrdinal[1:]
+            retval = _("{TheOrdinal} day").format(TheOrdinal=TheOrdinal)
         retval += of
         return retval
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

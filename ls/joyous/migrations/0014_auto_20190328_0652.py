@@ -7,34 +7,52 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0013_auto_20190221_1152'),
+        ("joyous", "0013_auto_20190221_1152"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='calendarpage',
-            options={'verbose_name': 'calendar page', 'verbose_name_plural': 'calendar pages'},
+            name="calendarpage",
+            options={
+                "verbose_name": "calendar page",
+                "verbose_name_plural": "calendar pages",
+            },
         ),
         migrations.AlterModelOptions(
-            name='generalcalendarpage',
-            options={'verbose_name': 'general calendar page', 'verbose_name_plural': 'general calendar pages'},
+            name="generalcalendarpage",
+            options={
+                "verbose_name": "general calendar page",
+                "verbose_name_plural": "general calendar pages",
+            },
         ),
         migrations.AlterModelOptions(
-            name='grouppage',
-            options={'verbose_name': 'group page', 'verbose_name_plural': 'group pages'},
+            name="grouppage",
+            options={
+                "verbose_name": "group page",
+                "verbose_name_plural": "group pages",
+            },
         ),
         migrations.AlterModelOptions(
-            name='specificcalendarpage',
-            options={'verbose_name': 'specific calendar page', 'verbose_name_plural': 'specific calendar pages'},
+            name="specificcalendarpage",
+            options={
+                "verbose_name": "specific calendar page",
+                "verbose_name_plural": "specific calendar pages",
+            },
         ),
         migrations.AlterField(
-            model_name='calendarpage',
-            name='intro',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Introductory text.', verbose_name='intro'),
+            model_name="calendarpage",
+            name="intro",
+            field=wagtail.core.fields.RichTextField(
+                blank=True, help_text="Introductory text.", verbose_name="intro"
+            ),
         ),
         migrations.AlterField(
-            model_name='extrainfopage',
-            name='extra_information',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Information just for this date', verbose_name='extra information'),
+            model_name="extrainfopage",
+            name="extra_information",
+            field=wagtail.core.fields.RichTextField(
+                blank=True,
+                help_text="Information just for this date",
+                verbose_name="extra information",
+            ),
         ),
     ]

@@ -7,18 +7,34 @@ import ls.joyous.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0009_alter_uid_notnull'),
+        ("joyous", "0009_alter_uid_notnull"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='calendarpage',
-            name='default_view',
-            field=models.CharField(choices=[('L', 'List View'), ('W', 'Weekly View'), ('M', 'Monthly View')], default='M', max_length=15),
+            model_name="calendarpage",
+            name="default_view",
+            field=models.CharField(
+                choices=[
+                    ("L", "List View"),
+                    ("W", "Weekly View"),
+                    ("M", "Monthly View"),
+                ],
+                default="M",
+                max_length=15,
+            ),
         ),
         migrations.AddField(
-            model_name='calendarpage',
-            name='view_choices',
-            field=ls.joyous.fields.MultipleSelectField(blank=True, choices=[('L', 'List View'), ('W', 'Weekly View'), ('M', 'Monthly View')], default=['L', 'W', 'M']),
+            model_name="calendarpage",
+            name="view_choices",
+            field=ls.joyous.fields.MultipleSelectField(
+                blank=True,
+                choices=[
+                    ("L", "List View"),
+                    ("W", "Weekly View"),
+                    ("M", "Monthly View"),
+                ],
+                default=["L", "W", "M"],
+            ),
         ),
     ]

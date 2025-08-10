@@ -8,23 +8,32 @@ import timezone_field.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0003_extrainfopage_extra_title'),
+        ("joyous", "0003_extrainfopage_extra_title"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='multidayeventpage',
-            name='tz',
-            field=timezone_field.fields.TimeZoneField(default=ls.joyous.models.events._get_default_timezone, verbose_name='Time zone'),
+            model_name="multidayeventpage",
+            name="tz",
+            field=timezone_field.fields.TimeZoneField(
+                default=ls.joyous.models.events._get_default_timezone,
+                verbose_name="Time zone",
+            ),
         ),
         migrations.AddField(
-            model_name='recurringeventpage',
-            name='tz',
-            field=timezone_field.fields.TimeZoneField(default=ls.joyous.models.events._get_default_timezone, verbose_name='Time zone'),
+            model_name="recurringeventpage",
+            name="tz",
+            field=timezone_field.fields.TimeZoneField(
+                default=ls.joyous.models.events._get_default_timezone,
+                verbose_name="Time zone",
+            ),
         ),
         migrations.AddField(
-            model_name='simpleeventpage',
-            name='tz',
-            field=timezone_field.fields.TimeZoneField(default=ls.joyous.models.events._get_default_timezone, verbose_name='Time zone'),
+            model_name="simpleeventpage",
+            name="tz",
+            field=timezone_field.fields.TimeZoneField(
+                default=ls.joyous.models.events._get_default_timezone,
+                verbose_name="Time zone",
+            ),
         ),
     ]

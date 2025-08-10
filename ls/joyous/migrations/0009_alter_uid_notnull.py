@@ -7,28 +7,52 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('joyous', '0008_populate_uid'),
+        ("joyous", "0008_populate_uid"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='multidayeventpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=False),
+            model_name="multidayeventpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=False,
+            ),
         ),
         migrations.AlterField(
-            model_name='postponementpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=False),
+            model_name="postponementpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=False,
+            ),
         ),
         migrations.AlterField(
-            model_name='recurringeventpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=False),
+            model_name="recurringeventpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=False,
+            ),
         ),
         migrations.AlterField(
-            model_name='simpleeventpage',
-            name='uid',
-            field=models.CharField(db_index=True, default=uuid.uuid4, editable=False, max_length=255, null=False),
+            model_name="simpleeventpage",
+            name="uid",
+            field=models.CharField(
+                db_index=True,
+                default=uuid.uuid4,
+                editable=False,
+                max_length=255,
+                null=False,
+            ),
         ),
     ]
