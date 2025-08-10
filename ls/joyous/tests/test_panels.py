@@ -8,11 +8,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.formats import get_format
-from wagtail.admin.panels import get_form_for_model
 from wagtail.models import Site
 from ls.joyous.models.recurring_events import (
-    CancellationPageForm,
-    RecurringEventPageForm,
     HiddenNumDaysPanel,
 )
 from ls.joyous.models import (
@@ -78,7 +75,7 @@ class TestExceptionDatePanel(TestCase):
         cancellation = CancellationPage(
             owner=self.user, except_date=dt.date(2019, 1, 21)
         )
-        Form = get_form_for_model(CancellationPage, form_class=CancellationPageForm)
+        Form = CancellationPage.get_edit_handler().get_form_class()
         form = Form(instance=cancellation, parent_page=self.event)
         panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
             CancellationPage
@@ -94,7 +91,7 @@ class TestExceptionDatePanel(TestCase):
         cancellation = CancellationPage(
             owner=self.user, overrides=self.event, except_date=dt.date(2019, 1, 21)
         )
-        Form = get_form_for_model(CancellationPage, form_class=CancellationPageForm)
+        Form = CancellationPage.get_edit_handler().get_form_class()
         form = Form(instance=cancellation, parent_page=self.event)
         widget = form["except_date"].field.widget
         panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
@@ -112,7 +109,7 @@ class TestExceptionDatePanel(TestCase):
         cancellation = CancellationPage(
             owner=self.user, overrides=self.event, except_date=dt.date(2019, 1, 21)
         )
-        Form = get_form_for_model(CancellationPage, form_class=CancellationPageForm)
+        Form = CancellationPage.get_edit_handler().get_form_class()
         form = Form(instance=cancellation, parent_page=self.event)
         panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
             CancellationPage
@@ -271,7 +268,7 @@ class TestHiddenNumDaysPanel(TestCase):
         )
         self.calendar.add_child(instance=self.event)
         self.event.save_revision().publish()
-        Form = get_form_for_model(RecurringEventPage, form_class=RecurringEventPageForm)
+        Form = RecurringEventPage.get_edit_handler().get_form_class()
         self.form = Form(instance=self.event, parent_page=self.calendar)
 
     def _getRequest(self):
