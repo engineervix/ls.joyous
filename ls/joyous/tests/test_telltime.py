@@ -6,6 +6,7 @@ import pytz
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from .testutils import datetimetz
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.utils.telltime import (
     getAwareDatetime,
     getLocalDatetime,
@@ -27,13 +28,13 @@ class TestLocalTimes(TestCase):
         when = getAwareDatetime(
             dt.date(1999, 12, 1), dt.time(2), pytz.timezone("Asia/Kuala_Lumpur")
         )
-        self.assertEqual(when.tzinfo.zone, "Asia/Kuala_Lumpur")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Asia/Kuala_Lumpur")
         self.assertEqual(when.date(), dt.date(1999, 12, 1))
         self.assertEqual(when.time(), dt.time(2))
         when = getAwareDatetime(
             dt.date(2004, 2, 15), None, pytz.timezone("Australia/Melbourne")
         )
-        self.assertEqual(when.tzinfo.zone, "Australia/Melbourne")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Australia/Melbourne")
         self.assertEqual(when.date(), dt.date(2004, 2, 15))
         self.assertEqual(when.time(), dt.time.max)
 
@@ -48,13 +49,13 @@ class TestLocalTimes(TestCase):
         when = getLocalDatetime(
             dt.date(2017, 3, 23), dt.time(18), pytz.timezone("Europe/Prague")
         )
-        self.assertEqual(when.tzinfo.zone, "Asia/Tokyo")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Asia/Tokyo")
         self.assertEqual(when.date(), dt.date(2017, 3, 24))
         self.assertEqual(when.time(), dt.time(2)),
         when = getLocalDatetime(
             dt.date(2006, 6, 22), None, pytz.timezone("America/Toronto"), dt.time(0)
         )
-        self.assertEqual(when.tzinfo.zone, "Asia/Tokyo")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Asia/Tokyo")
         self.assertEqual(when.date(), dt.date(2006, 6, 22))
         self.assertEqual(when.time(), dt.time(0))
 

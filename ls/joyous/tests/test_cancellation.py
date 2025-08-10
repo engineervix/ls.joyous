@@ -7,6 +7,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
 from wagtail.models import Page, PageViewRestriction
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.models import CalendarPage
 from ls.joyous.models import RecurringEventPage
 from ls.joyous.models import CancellationPage
@@ -228,7 +229,7 @@ class TestTZ(TestCase):
     @freeze_timetz("1989-02-02T06:00:00+11:00")
     def testCurrentLocalDt(self):
         when = self.cancellation._current_datetime_from
-        self.assertEqual(when.tzinfo.zone, "Australia/Sydney")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Australia/Sydney")
         self.assertEqual(when.time(), dt.time(5, 30))
         self.assertEqual(when.date(), dt.date(1989, 2, 2))
 
@@ -241,7 +242,7 @@ class TestTZ(TestCase):
     @timezone.override("Australia/Sydney")
     def testPastLocalDt(self):
         when = self.cancellation._past_datetime_from
-        self.assertEqual(when.tzinfo.zone, "Australia/Sydney")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Australia/Sydney")
         self.assertEqual(when.time(), dt.time(5, 30))
         self.assertEqual(when.date(), dt.date(1989, 2, 2))
 

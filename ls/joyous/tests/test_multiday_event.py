@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
 from wagtail.models import Page
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.models import CalendarPage
 from ls.joyous.models import MultidayEventPage
 from freezegun import freeze_time
@@ -246,7 +247,7 @@ class TestTZ(TestCase):
     @timezone.override("Pacific/Auckland")
     def testPastLocalDt(self):
         when = self.event._past_datetime_from
-        self.assertEqual(when.tzinfo.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Pacific/Auckland")
         self.assertEqual(when.time(), dt.time.max)
         self.assertEqual(when.date(), dt.date(2018, 3, 17))
 

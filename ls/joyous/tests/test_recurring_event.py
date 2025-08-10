@@ -8,6 +8,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from django.utils import timezone
 from wagtail.models import Site, Page
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.utils.recurrence import Recurrence
 from ls.joyous.utils.recurrence import DAILY, WEEKLY, MONTHLY
 from ls.joyous.utils.recurrence import TU, TH, SA, SU, EVERYWEEKDAY
@@ -326,19 +327,19 @@ class TestTZ(TestCase):
     @timezone.override("America/Los_Angeles")
     def testCurrentLocalDt(self):
         when = self.event._current_datetime_from
-        self.assertEqual(when.tzinfo.zone, "America/Los_Angeles")
+        self.assertEqual(get_timezone_name(when.tzinfo), "America/Los_Angeles")
         self.assertEqual(when.weekday(), calendar.TUESDAY)
 
     @timezone.override("America/Los_Angeles")
     def testFutureLocalDt(self):
         when = self.event._future_datetime_from
-        self.assertEqual(when.tzinfo.zone, "America/Los_Angeles")
+        self.assertEqual(get_timezone_name(when.tzinfo), "America/Los_Angeles")
         self.assertEqual(when.weekday(), calendar.TUESDAY)
 
     @timezone.override("Pacific/Auckland")
     def testPastLocalDt(self):
         when = self.event._past_datetime_from
-        self.assertEqual(when.tzinfo.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(when.tzinfo), "Pacific/Auckland")
         self.assertEqual(when.weekday(), calendar.WEDNESDAY)
 
     @timezone.override("Pacific/Kiritimati")

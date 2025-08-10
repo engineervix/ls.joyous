@@ -8,6 +8,7 @@ from django_bs_test import TestCase
 from django.contrib.auth.models import User, AnonymousUser, Group
 from django.utils import timezone
 from wagtail.models import Page, PageViewRestriction
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.models import SpecificCalendarPage
 from ls.joyous.models import SimpleEventPage, ThisEvent, EventsOnDay
 from ls.joyous.models import get_group_model
@@ -232,7 +233,7 @@ class TestTZ(TestCase):
     @timezone.override("America/Los_Angeles")
     def testPastLocalDt(self):
         when = self.event._past_datetime_from
-        self.assertEqual(when.tzinfo.zone, "America/Los_Angeles")
+        self.assertEqual(get_timezone_name(when.tzinfo), "America/Los_Angeles")
         self.assertEqual(when.time(), dt.time(18))
         self.assertEqual(when.date(), dt.date(1987, 6, 4))
 

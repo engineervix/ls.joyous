@@ -15,6 +15,21 @@ from ..models import (
 )
 from ..utils.telltime import getAwareDatetime
 
+# ------------------------------------------------------------------------------
+
+
+def get_timezone_name(tz):
+    """Get timezone name compatible with both pytz and zoneinfo"""
+    if hasattr(tz, "zone"):
+        # pytz timezone
+        return tz.zone
+    elif hasattr(tz, "key"):
+        # zoneinfo.ZoneInfo timezone
+        return tz.key
+    else:
+        # fallback - convert to string and hope for the best
+        return str(tz)
+
 
 # ------------------------------------------------------------------------------
 class GoogleCalendarHandler:
@@ -67,7 +82,7 @@ class SimpleGEvent(GEvent):
         dtend = getAwareDatetime(page.date, page.time_to, page.tz, dt.time.max)
         gevent.set("dates", vPeriod((dtstart, dtend)).to_ical().decode())
         if page.tz != pytz.utc:
-            gevent.set("ctz", page.tz.zone)
+            gevent.set("ctz", get_timezone_name(page.tz))
         return gevent
 
 
@@ -80,7 +95,7 @@ class MultidayGEvent(GEvent):
         dtend = getAwareDatetime(page.date_to, page.time_to, page.tz, dt.time.max)
         gevent.set("dates", vPeriod((dtstart, dtend)).to_ical().decode())
         if page.tz != pytz.utc:
-            gevent.set("ctz", page.tz.zone)
+            gevent.set("ctz", get_timezone_name(page.tz))
         return gevent
 
 
@@ -94,7 +109,7 @@ class RecurringGEvent(GEvent):
         dtend = page._getMyFirstDatetimeTo() or minDt
         gevent.set("dates", vPeriod((dtstart, dtend)).to_ical().decode())
         if page.tz != pytz.utc:
-            gevent.set("ctz", page.tz.zone)
+            gevent.set("ctz", get_timezone_name(page.tz))
         gevent.set("recur", "RRULE:" + page.repeat._getRrule())
         return gevent
 
