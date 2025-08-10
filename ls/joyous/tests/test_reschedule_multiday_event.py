@@ -11,6 +11,7 @@ from ls.joyous.models import (
     RescheduleMultidayEventPage,
 )
 from ls.joyous.utils.recurrence import Recurrence, WEEKLY, TU
+from ls.joyous.utils.panels import get_panel_fields
 from .testutils import freeze_timetz, datetimetz
 
 
@@ -87,7 +88,7 @@ class Test(TestCase):
             any(
                 field in removed
                 for panel in panels
-                for field in panel.required_fields()
+                for field in get_panel_fields(panel)
             )
         )
 

@@ -39,6 +39,7 @@ from ..utils.telltime import timeFormat, dateFormat
 from ..fields import RecurrenceField
 from ..forms import FormDefender, BorgPageForm
 from ..panels import TZDatePanel, ExceptionDatePanel, TimePanel, MapFieldPanel
+from ..utils.panels import get_panel_fields
 from ..holidays import Holidays
 from .groups import get_group_model_string
 from .event_base import (
@@ -1472,10 +1473,10 @@ class PostponementPage(RoutablePageMixin, RescheduleEventBase, CancellationPage)
         super()._copyFieldsFromParent(parent)
         parentFields = set()
         for panel in parent.content_panels:
-            parentFields.update(panel.required_fields())
+            parentFields.update(get_panel_fields(panel))
         pageFields = set()
         for panel in self.content_panels:
-            pageFields.update(panel.required_fields())
+            pageFields.update(get_panel_fields(panel))
         commonFields = parentFields & pageFields
         for name in commonFields:
             setattr(self, name, getattr(parent, name))

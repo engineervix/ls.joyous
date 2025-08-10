@@ -11,6 +11,7 @@ from ls.joyous.models import (
     PostponementPage,
     RescheduleMultidayEventPage,
 )
+from ls.joyous.utils.panels import get_panel_fields
 
 
 # ------------------------------------------------------------------------------
@@ -33,7 +34,7 @@ class Test(TestCase):
                     any(
                         field in removed
                         for panel in cls.content_panels
-                        for field in panel.required_fields()
+                        for field in get_panel_fields(panel)
                     )
                 )
 
