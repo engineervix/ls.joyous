@@ -95,7 +95,6 @@ FORMAT_MODULE_PATH = "ls.joyous.tests.formats"
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Tokyo"
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 WAGTAIL_SITE_NAME = "Testing"

@@ -178,7 +178,7 @@ class TestCalendar(TestCase):
 
     def testMiniMonthAjaxView(self):
         response = self.client.get(
-            "/events/mini/2011/06/", HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+            "/events/mini/2011/06/", headers={"x-requested-with": "XMLHttpRequest"}
         )
         select = response.soup.select
         self.assertEqual(response.status_code, 200)

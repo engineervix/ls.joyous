@@ -7,7 +7,6 @@ try:
 except ImportError:  # pragma: no cover
     __version__ = "1.4"
 
-default_app_config = "ls.joyous.apps.JoyousAppConfig"
 
 # ------------------------------------------------------------------------------
 # Note: Default settings
