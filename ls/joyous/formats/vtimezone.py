@@ -39,6 +39,26 @@ def to_naive_utc(dtime):
     return dtime_naive
 
 
+def _ensure_pytz_timezone(tz):
+    """
+    Convert zoneinfo.ZoneInfo to equivalent pytz timezone if needed.
+    Returns the original timezone if it's already pytz or conversion fails.
+    """
+    # If it's already pytz, return as-is
+    if hasattr(tz, '_utc_transition_times'):
+        return tz
+    
+    # Try to convert zoneinfo to pytz
+    if hasattr(tz, 'key'):
+        try:
+            return pytz.timezone(tz.key)
+        except Exception:
+            pass
+    
+    # If conversion fails, return original (will be handled by caller)
+    return tz
+
+
 def create_timezone(tz, first_date=None, last_date=None):
     """
     create an icalendar vtimezone from a pytz.tzinfo object
@@ -68,13 +88,32 @@ def create_timezone(tz, first_date=None, last_date=None):
     easy solution, we'd really need to ship another version of the OLSON DB.
 
     """
+    # Convert zoneinfo to pytz if needed for compatibility
+    original_tz_name = getattr(tz, 'zone', getattr(tz, 'key', str(tz)))
+    tz = _ensure_pytz_timezone(tz)
+    
     if isinstance(tz, pytz.tzinfo.StaticTzInfo):
-        return _create_timezone_static(tz)
+        return _create_timezone_static(tz, original_tz_name)
+
+    # If we still don't have pytz transition data, skip VTIMEZONE creation
+    if not hasattr(tz, '_utc_transition_times'):
+        # Return a minimal timezone component
+        timezone = icalendar.Timezone()
+        timezone.add("TZID", original_tz_name)
+        
+        # Create a basic standard time component
+        subcomp = icalendar.TimezoneStandard()
+        subcomp.add("TZNAME", original_tz_name)
+        subcomp.add("DTSTART", dt.datetime(1970, 1, 1))
+        subcomp.add("TZOFFSETTO", dt.timedelta(0))  # Fallback to UTC
+        subcomp.add("TZOFFSETFROM", dt.timedelta(0))
+        timezone.add_component(subcomp)
+        return timezone
 
     first_date = dt.datetime.today() if not first_date else to_naive_utc(first_date)
     last_date = dt.datetime.today() if not last_date else to_naive_utc(last_date)
     timezone = icalendar.Timezone()
-    timezone.add("TZID", tz)
+    timezone.add("TZID", original_tz_name)
 
     # This is not a reliable way of determining if a transition is for
     # daylight savings.
@@ -137,7 +176,7 @@ def create_timezone(tz, first_date=None, last_date=None):
     return timezone
 
 
-def _create_timezone_static(tz):
+def _create_timezone_static(tz, tz_name=None):
     """create an icalendar vtimezone from a pytz.tzinfo.StaticTzInfo
 
     :param tz: the timezone
@@ -146,9 +185,9 @@ def _create_timezone_static(tz):
     :rtype: icalendar.Timezone()
     """
     timezone = icalendar.Timezone()
-    timezone.add("TZID", tz)
+    timezone.add("TZID", tz_name or tz)
     subcomp = icalendar.TimezoneStandard()
-    subcomp.add("TZNAME", tz)
+    subcomp.add("TZNAME", tz_name or tz)
     subcomp.add("DTSTART", dt.datetime(1601, 1, 1))
     subcomp.add("RDATE", dt.datetime(1601, 1, 1))
     subcomp.add("TZOFFSETTO", tz._utcoffset)
