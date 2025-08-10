@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
 from wagtail.models import Site, Page
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.models.calendar import CalendarPage
 from ls.joyous.models import (
     SimpleEventPage,
@@ -122,7 +123,7 @@ END:VCALENDAR"""
         self.assertEqual(event.date, dt.date(2018, 7, 24))
         self.assertEqual(event.time_from, dt.time(19))
         self.assertEqual(event.time_to, dt.time(21, 30))
-        self.assertEqual(event.tz.zone, "America/New_York")
+        self.assertEqual(get_timezone_name(event.tz), "America/New_York")
 
     @freeze_time("2018-02-01")
     @timezone.override("Pacific/Auckland")
@@ -305,7 +306,7 @@ END:VCALENDAR
                 ]
             ),
         )
-        self.assertEqual(tueMorn.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(tueMorn.tz), "Pacific/Auckland")
         self.assertEqual(tueMorn.time_from, dt.time(9, 30))
         self.assertEqual(tueMorn.time_to, dt.time(11, 30))
         self.assertEqual(tueMorn.location, "Coast Rd, Barrytown, New Zealand")
@@ -322,7 +323,7 @@ END:VCALENDAR
         self.assertEqual(tue24th.slug, "2018-07-24-postponement")
         self.assertEqual(tue24th.title, "Postponement for Tuesday 24th of July")
         self.assertEqual(tue24th.details, tueMorn.details)
-        self.assertEqual(tue24th.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(tue24th.tz), "Pacific/Auckland")
         self.assertEqual(tue24th.except_date, dt.date(2018, 7, 24))
         self.assertEqual(tue24th.date, dt.date(2018, 7, 25))
         self.assertEqual(tue24th.time_from, dt.time(9, 30))
@@ -344,7 +345,7 @@ END:VCALENDAR
                 ]
             ),
         )
-        self.assertEqual(tue31st.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(tue31st.tz), "Pacific/Auckland")
         self.assertEqual(tue31st.except_date, dt.date(2018, 7, 31))
 
         self.assertEqual(tue14th.owner, self.user)
@@ -353,14 +354,14 @@ END:VCALENDAR
         self.assertEqual(tue14th.title, "Cancellation for Tuesday 14th of August")
         self.assertEqual(tue14th.cancellation_title, "")
         self.assertEqual(tue14th.cancellation_details, "")
-        self.assertEqual(tue14th.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(tue14th.tz), "Pacific/Auckland")
         self.assertEqual(tue14th.except_date, dt.date(2018, 8, 14))
 
         self.assertEqual(daysOff.owner, self.user)
         self.assertEqual(daysOff.slug, "three-days-off")
         self.assertEqual(daysOff.title, "Three days off")
         self.assertEqual(daysOff.details, "")
-        self.assertEqual(daysOff.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(daysOff.tz), "Pacific/Auckland")
         self.assertEqual(daysOff.date_from, dt.date(2018, 7, 13))
         self.assertEqual(daysOff.time_from, None)
         self.assertEqual(daysOff.date_to, dt.date(2018, 7, 15))
@@ -446,7 +447,7 @@ END:VCALENDAR
             "Hounit <b>catlike</b> at ethatial to thin a usistiques onshiend "
             "alits mily tente duse prommuniss ind sedships itommunte of perpollood.",
         )
-        self.assertEqual(bigThur.tz.zone, "Australia/Sydney")
+        self.assertEqual(get_timezone_name(bigThur.tz), "Australia/Sydney")
         self.assertEqual(bigThur.date_from, dt.date(2018, 7, 26))
         self.assertEqual(bigThur.time_from, dt.time(7))
         self.assertEqual(bigThur.date_to, dt.date(2018, 7, 26))
@@ -551,7 +552,7 @@ END:VCALENDAR
                 ]
             ),
         )
-        self.assertEqual(flight1.tz.zone, "Asia/Tokyo")
+        self.assertEqual(get_timezone_name(flight1.tz), "Asia/Tokyo")
         self.assertEqual(flight1.date, dt.date(2018, 7, 30))
         self.assertEqual(flight1.time_from, dt.time(9, 25))
         self.assertEqual(flight1.time_to, dt.time(10, 15))
@@ -571,7 +572,7 @@ END:VCALENDAR
                 ]
             ),
         )
-        self.assertEqual(flight2.tz.zone, "Asia/Tokyo")
+        self.assertEqual(get_timezone_name(flight2.tz), "Asia/Tokyo")
         self.assertEqual(flight2.date, dt.date(2018, 7, 31))
         self.assertEqual(flight2.time_from, dt.time(8, 15))
         self.assertEqual(flight2.time_to, dt.time(9))
@@ -642,7 +643,7 @@ END:VCALENDAR
                 ]
             ),
         )
-        self.assertEqual(event.tz.zone, "UTC")
+        self.assertEqual(get_timezone_name(event.tz), "UTC")
         self.assertEqual(event.date, dt.date(2018, 8, 31))
         self.assertEqual(event.time_from, dt.time(7))
         self.assertEqual(event.time_to, dt.time(10))
@@ -700,7 +701,7 @@ END:VCALENDAR"""
 
         self.assertIs(type(event), RecurringEventPage)
         self.assertEqual(event.slug, "exercise")
-        self.assertEqual(event.tz.zone, "America/New_York")
+        self.assertEqual(get_timezone_name(event.tz), "America/New_York")
         self.assertEqual(event.time_from, dt.time(5))
         self.assertEqual(event.time_to, dt.time(7))
         self.assertEqual(event.repeat.getCount(), 7)
@@ -761,7 +762,7 @@ END:VCALENDAR"""
 
         self.assertIs(type(event), MultidayRecurringEventPage)
         self.assertEqual(event.title, "Bought from a Rubber Man")
-        self.assertEqual(event.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(event.tz), "Pacific/Auckland")
         self.assertEqual(event.num_days, 3)
         self.assertEqual(event.time_from, dt.time(16))
         self.assertEqual(event.time_to, dt.time(18))
@@ -848,7 +849,7 @@ END:VCALENDAR"""
         self.assertIs(type(event), MultidayRecurringEventPage)
         self.assertEqual(event.title, "Colour In")
         self.assertEqual(event.details, "<h2>Paint that scene.</h2>")
-        self.assertEqual(event.tz.zone, "Pacific/Auckland")
+        self.assertEqual(get_timezone_name(event.tz), "Pacific/Auckland")
         self.assertEqual(event.num_days, 2)
         self.assertEqual(event.time_from, dt.time(10, 30))
         self.assertEqual(event.time_to, dt.time(14))

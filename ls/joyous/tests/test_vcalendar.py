@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.test import TestCase, RequestFactory
 from wagtail.models import Site, Page, PageViewRestriction
+from ls.joyous.formats.google import get_timezone_name
 from ls.joyous.utils.recurrence import Recurrence
 from ls.joyous.utils.recurrence import WEEKLY, MO, WE, TH, FR
 from ls.joyous.models import (
@@ -554,7 +555,7 @@ class Test(TestCase):
             .all()
         )
         self.assertEqual(len(events), 1)
-        self.assertEqual(events[0].tz.zone, "Asia/Tokyo")
+        self.assertEqual(get_timezone_name(events[0].tz), "Asia/Tokyo")
         msgs = list(messages.get_messages(request))
         self.assertEqual(len(msgs), 1)
         self.assertEqual(msgs[0].level, messages.WARNING)
