@@ -179,10 +179,18 @@ class CalendarPage(RoutablePageMixin, Page, metaclass=FormDefender):
         else:
             return self.serveMonth(request, year)
 
-    @route(r"^{YYYY}/{Mon}/$(?i)".format(**DatePictures))
+    @route(r"^{YYYY}/{Mon}/$".format(**DatePictures))
     def routeByMonthAbbr(self, request, year, monthAbbr):
         """Route a request with a month abbreviation to the monthly view."""
-        month = (DatePictures["Mon"].index(monthAbbr.lower()) // 4) + 1
+        # Convert to lowercase for case-insensitive matching
+        monthAbbr = monthAbbr.lower()
+        try:
+            # Find the month number (1-12) from the abbreviation
+            month_abbrs_lower = [abbr.lower() for abbr in MONTH_ABBRS[1:]]
+            month = month_abbrs_lower.index(monthAbbr) + 1
+        except ValueError:
+            # If abbreviation not found, let Django handle the 404
+            raise Http404("Invalid month abbreviation")
         return self.serveMonth(request, year, month)
 
     @route(r"^month/$")
