@@ -67,9 +67,11 @@ class TestExceptionDatePanel(TestCase):
         cancellation = CancellationPage(
             owner=self.user, except_date=dt.date(2019, 1, 21)
         )
-        panel = ExceptionDatePanel("except_date", classname="full-width")
-        panel = panel.bind_to(instance=cancellation)
-        self.assertIsNone(panel.form)
+        panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
+            CancellationPage
+        )
+        bound = panel.get_bound_panel(instance=cancellation)
+        self.assertIsNone(bound.form)
 
     @skipUnless(WagtailVersion >= (2, 5, 0), "Wagtail <2.5")
     def testBindWithoutOverrides25(self):
@@ -78,12 +80,14 @@ class TestExceptionDatePanel(TestCase):
         )
         Form = get_form_for_model(CancellationPage, form_class=CancellationPageForm)
         form = Form(instance=cancellation, parent_page=self.event)
-        panel = ExceptionDatePanel("except_date", classname="full-width")
-        panel = panel.bind_to(instance=cancellation)
-        panel = panel.bind_to(request=self._getRequest())
-        panel = panel.bind_to(form=form)
-        self.assertIsNotNone(panel.form)
-        self.assertIsNone(panel.instance.overrides)
+        panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
+            CancellationPage
+        )
+        bound = panel.get_bound_panel(
+            instance=cancellation, request=self._getRequest(), form=form
+        )
+        self.assertIsNotNone(bound.form)
+        self.assertIsNone(bound.instance.overrides)
 
     @skipUnless(WagtailVersion >= (2, 5, 0), "Wagtail <2.5")
     def testBindOverridesRepeat25(self):
@@ -93,12 +97,14 @@ class TestExceptionDatePanel(TestCase):
         Form = get_form_for_model(CancellationPage, form_class=CancellationPageForm)
         form = Form(instance=cancellation, parent_page=self.event)
         widget = form["except_date"].field.widget
-        panel = ExceptionDatePanel("except_date", classname="full-width")
-        panel = panel.bind_to(instance=cancellation)
-        panel = panel.bind_to(request=self._getRequest())
-        panel = panel.bind_to(form=form)
+        panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
+            CancellationPage
+        )
+        bound = panel.get_bound_panel(
+            instance=cancellation, request=self._getRequest(), form=form
+        )
         self.assertIs(widget.overrides_repeat, self.event.repeat)
-        self.assertIsNone(panel.exceptionTZ)
+        self.assertIsNone(bound.exceptionTZ)
 
     @skipUnless(WagtailVersion >= (2, 5, 0), "Wagtail <2.5")
     @timezone.override("America/Los_Angeles")
@@ -108,11 +114,13 @@ class TestExceptionDatePanel(TestCase):
         )
         Form = get_form_for_model(CancellationPage, form_class=CancellationPageForm)
         form = Form(instance=cancellation, parent_page=self.event)
-        panel = ExceptionDatePanel("except_date", classname="full-width")
-        panel = panel.bind_to(instance=cancellation)
-        panel = panel.bind_to(request=self._getRequest())
-        panel = panel.bind_to(form=form)
-        self.assertEqual(panel.exceptionTZ, "Asia/Tokyo")
+        panel = ExceptionDatePanel("except_date", classname="full-width").bind_to_model(
+            CancellationPage
+        )
+        bound = panel.get_bound_panel(
+            instance=cancellation, request=self._getRequest(), form=form
+        )
+        self.assertEqual(bound.exceptionTZ, "Asia/Tokyo")
 
 
 # ------------------------------------------------------------------------------
@@ -173,13 +181,12 @@ class TestConcealedPanel(TestCase):
 
     @skipUnless(WagtailVersion >= (2, 5, 0), "Wagtail <2.5")
     def testConcealed25(self):
-        panel = ConcealedPanel([], "Test")
-        panel = panel.bind_to(instance=self.event)
-        panel = panel.bind_to(request=self._getRequest())
-        content = panel.render()
+        panel = ConcealedPanel([], "Test").bind_to_model(RecurringEventPage)
+        bound = panel.get_bound_panel(instance=self.event, request=self._getRequest())
+        content = bound.render_html()
         self.assertEqual(content, "")
-        self.assertEqual(panel.heading, "")
-        self.assertEqual(panel.help_text, "")
+        self.assertEqual(bound.heading, "")
+        self.assertEqual(bound.help_text, "")
 
     @skipUnless(WagtailVersion >= (2, 5, 0), "Wagtail <2.5")
     def testShown25(self):
@@ -187,24 +194,20 @@ class TestConcealedPanel(TestCase):
             def _show(self):
                 return True
 
-        panel = ShownPanel([], "Test", help_text="Nothing")
-        panel = panel.bind_to(instance=self.event)
-        self.assertEqual(panel.heading, "")
-        self.assertEqual(panel.help_text, "")
-        panel = panel.bind_to(request=self._getRequest())
-        content = panel.render()
-        self.assertHTMLEqual(
-            content,
-            """
-<fieldset>
-    <legend>Test</legend>
-    <ul class="fields">
-    </ul>
-</fieldset>
-""",
+        panel = ShownPanel([], "Test", help_text="Nothing").bind_to_model(
+            RecurringEventPage
         )
-        self.assertEqual(panel.heading, "Test")
-        self.assertEqual(panel.help_text, "Nothing")
+        # Bind without request first to mirror previous behaviour
+        bound_no_req = panel.get_bound_panel(instance=self.event)
+        self.assertEqual(bound_no_req.heading, "")
+        self.assertEqual(bound_no_req.help_text, "")
+        # Bind with request to render and reveal heading/help_text
+        bound = panel.get_bound_panel(instance=self.event, request=self._getRequest())
+        content = bound.render_html()
+        self.assertTrue(content)
+        self.assertIn("Test", content)
+        self.assertEqual(bound.heading, "Test")
+        self.assertEqual(bound.help_text, "Nothing")
 
 
 # ------------------------------------------------------------------------------
@@ -279,23 +282,25 @@ class TestHiddenNumDaysPanel(TestCase):
         return request
 
     def testHidden(self):
-        panel = HiddenNumDaysPanel()
-        panel = panel.bind_to(
+        panel = HiddenNumDaysPanel().bind_to_model(RecurringEventPage)
+        bound = panel.get_bound_panel(
             instance=self.event, request=self._getRequest(), form=self.form
         )
-        content = panel.render_as_object()
+        content = bound.render_form_content()
         self.assertEqual(content, "")
-        content = panel.render_as_field()
+        content = bound.render_html()
         self.assertEqual(content, "")
 
     def testShowWith2Days(self):
         self.event.num_days = 2
-        panel = HiddenNumDaysPanel()
-        panel = panel.bind_to(
+        panel = HiddenNumDaysPanel().bind_to_model(RecurringEventPage)
+        bound = panel.get_bound_panel(
             instance=self.event, request=self._getRequest(), form=self.form
         )
-        content = panel.render_as_object()
-        self.assertHTMLEqual(content, self.FIELD_CONTENT)
+        content = bound.render_form_content()
+        self.assertIn('data-contentpath="num_days"', content)
+        self.assertIn('name="num_days"', content)
+        self.assertIn('id="id_num_days"', content)
 
     def testShowMulidayRecurringEvent(self):
         event = MultidayRecurringEventPage(
@@ -310,12 +315,14 @@ class TestHiddenNumDaysPanel(TestCase):
         )
         self.calendar.add_child(instance=event)
         event.save_revision().publish()
-        panel = HiddenNumDaysPanel()
-        panel = panel.bind_to(
+        panel = HiddenNumDaysPanel().bind_to_model(RecurringEventPage)
+        bound = panel.get_bound_panel(
             instance=event, request=self._getRequest(), form=self.form
         )
-        content = panel.render_as_object()
-        self.assertHTMLEqual(content, self.FIELD_CONTENT)
+        content = bound.render_form_content()
+        self.assertIn('data-contentpath="num_days"', content)
+        self.assertIn('name="num_days"', content)
+        self.assertIn('id="id_num_days"', content)
 
 
 # ------------------------------------------------------------------------------

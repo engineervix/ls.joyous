@@ -220,12 +220,6 @@ class HiddenNumDaysPanel(FieldPanel):
     def __init__(self, field_name="num_days", *args, **kwargs):
         super().__init__(field_name, *args, **kwargs)
 
-    def render_as_object(self):
-        return super().render_as_object() if self._show() else ""
-
-    def render_as_field(self):
-        return super().render_as_field() if self._show() else ""
-
     def _show(self):
         page = getattr(self, "instance", None)
         if isinstance(page, (MultidayRecurringEventPage, RescheduleMultidayEventPage)):
@@ -234,6 +228,28 @@ class HiddenNumDaysPanel(FieldPanel):
             numDays = getattr(page, "num_days", 0)
             retval = numDays > 1
         return retval
+
+    class BoundPanel(FieldPanel.BoundPanel):
+        def is_shown(self):
+            # Delegate to the panel's visibility logic, but use the bound
+            # instance rather than attributes set on the panel definition
+            page = self.instance
+            if isinstance(
+                page, (MultidayRecurringEventPage, RescheduleMultidayEventPage)
+            ):
+                return True
+            num_days = getattr(page, "num_days", 0)
+            return num_days > 1
+
+        def render_form_content(self):
+            if not self.is_shown():
+                return ""
+            return super().render_form_content()
+
+        def render_html(self, parent_context=None):
+            if not self.is_shown():
+                return ""
+            return super().render_html(parent_context)
 
 
 class RecurringEventPageForm(EventPageForm):

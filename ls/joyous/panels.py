@@ -21,21 +21,23 @@ class TZDatePanel(FieldPanel):
     """
 
     widget = AdminDateInput
-    object_template = "joyous/edit_handlers/tz_date_object.html"
 
-    def on_instance_bound(self):
-        super().on_instance_bound()
-        if not self.form:
-            # wait for the form to be set, it will eventually be
-            return
-        localTZ = timezone.get_current_timezone()
-        localTZName = timezone._get_timezone_name(localTZ)
-        myTZ = getattr(self.instance, "tz", localTZ)
-        myTZName = timezone._get_timezone_name(myTZ)
-        if myTZName != localTZName:
-            self.exceptionTZ = myTZName
-        else:
+    class BoundPanel(FieldPanel.BoundPanel):
+        template_name = "joyous/edit_handlers/tz_date_object.html"
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            # Default to None to mirror previous behaviour when form/instance
+            # were not yet available
             self.exceptionTZ = None
+            if self.instance is None:
+                return
+            # Compute the display timezone once bound
+            local_tz = timezone.get_current_timezone()
+            local_tz_name = timezone._get_timezone_name(local_tz)
+            my_tz = getattr(self.instance, "tz", local_tz)
+            my_tz_name = timezone._get_timezone_name(my_tz)
+            if my_tz_name != local_tz_name:
+                self.exceptionTZ = my_tz_name
 
 
 # ------------------------------------------------------------------------------
@@ -46,15 +48,19 @@ class ExceptionDatePanel(TZDatePanel):
 
     widget = ExceptionDateInput
 
-    def on_instance_bound(self):
-        super().on_instance_bound()
-        if not self.form:
-            # wait for the form to be set, it will eventually be
-            return
-        if not self.instance.overrides:
-            return
-        widget = self.form[self.field_name].field.widget
-        widget.overrides_repeat = self.instance.overrides_repeat
+    class BoundPanel(TZDatePanel.BoundPanel):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            # If we have a bound field and the instance refers to an override,
+            # pass the recurrence rule to the widget
+            if (
+                self.bound_field is not None
+                and getattr(self.instance, "overrides", None) is not None
+            ):
+                widget = self.bound_field.field.widget
+                widget.overrides_repeat = getattr(
+                    self.instance, "overrides_repeat", None
+                )
 
 
 # ------------------------------------------------------------------------------
@@ -131,17 +137,22 @@ class ConcealedPanel(MultiFieldPanel):
             help_text=self._help_text,
         )
 
-    def on_instance_bound(self):
-        super().on_instance_bound()
-        if not self.request:
-            # wait for the request to be set, it will eventually be
-            return
-        if self._show():
-            self.heading = self._heading
-            self.help_text = self._help_text
+    class BoundPanel(MultiFieldPanel.BoundPanel):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            if self.is_shown():
+                # Only reveal heading/help_text when shown
+                self.heading = self.panel._heading
+                self.help_text = self.panel._help_text
 
-    def render(self):
-        return super().render() if self._show() else ""
+        def is_shown(self):
+            # Delegate to panel logic (which can be overridden in subclasses)
+            return self.panel._show()
+
+        def render_html(self, parent_context=None):
+            if not self.is_shown():
+                return ""
+            return super().render_html(parent_context)
 
     def _show(self):
         return False
