@@ -7,8 +7,8 @@ from django.test import RequestFactory
 from django_bs_test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
+import wagtail.coreutils
 from wagtail.models import Page
-import wagtail.models
 from wagtail.test.utils.form_data import rich_text
 from ls.joyous.models import (
     GeneralCalendarPage,
@@ -219,13 +219,13 @@ class Test(TestCase):
             self.postponement.getCancellationUrl(self.request),
             "/events/test-meeting/1990-10-10-postponement/from/",
         )
-        was = wagtail.models.WAGTAIL_APPEND_SLASH
-        wagtail.models.WAGTAIL_APPEND_SLASH = False
+        was = wagtail.coreutils.WAGTAIL_APPEND_SLASH
+        wagtail.coreutils.WAGTAIL_APPEND_SLASH = False
         self.assertEqual(
             self.postponement.getCancellationUrl(self.request),
             "/events/test-meeting/1990-10-10-postponement/from",
         )
-        wagtail.models.WAGTAIL_APPEND_SLASH = was
+        wagtail.coreutils.WAGTAIL_APPEND_SLASH = was
 
 
 # ------------------------------------------------------------------------------
