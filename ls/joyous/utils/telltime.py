@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 import datetime as dt
 import re
+import django
 from django.conf import settings
 from django.utils import dateformat
 from django.utils import formats
@@ -97,9 +98,22 @@ def getAwareDatetime(date, time, tz, timeDefault=dt.time.max):
     if time is None:
         time = timeDefault
     datetime = dt.datetime.combine(date, time)
-    # arbitary rule to handle DST transitions:
-    # if daylight savings causes an error then use standard time
-    datetime = timezone.make_aware(datetime, tz, is_dst=False)
+
+    # Handle Django version differences for make_aware
+    if django.VERSION >= (5, 0):
+        # Django 5.0+ removed is_dst parameter
+        # https://docs.djangoproject.com/en/5.2/releases/5.0/#features-removed-in-5-0
+        try:
+            datetime = timezone.make_aware(datetime, tz)
+        except Exception:
+            # If there's a DST ambiguity, try to handle it gracefully
+            # by using the fold parameter (Python 3.6+)
+            datetime = datetime.replace(fold=1)  # Use standard time
+            datetime = timezone.make_aware(datetime, tz)
+    else:
+        # Django < 5.0 accepts is_dst parameter
+        datetime = timezone.make_aware(datetime, tz, is_dst=False)
+
     return datetime
 
 
