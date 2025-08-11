@@ -25,14 +25,13 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
-      - name: Set up Python
-        run: uv python install 3.12
-
-      - name: Install flake8
-        run: uv pip install --system flake8
+      - name: Set up Python and install flake8
+        run: |
+          uv python install 3.12
+          uv pip install flake8
 
       - name: Run flake8
-        run: flake8 ls/joyous
+        run: uv run flake8 ls/joyous
 
   test:
     name: Tests (Python ${{ matrix.python }}, Django ${{ matrix.django }}, Wagtail ${{ matrix.wagtail }})
