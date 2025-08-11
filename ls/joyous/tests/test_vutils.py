@@ -95,11 +95,8 @@ class TestVDt(TestCase):
         self.assertEqual(v.timezone(), dt.timezone.utc)
 
     def testAwareDt(self):
-        mo = vDatetime(
-            timezone.make_aware(
-                dt.datetime(2013, 4, 25, 6, 0), pytz.timezone("Pacific/Chatham")
-            )
-        )
+        tz = pytz.timezone("Pacific/Chatham")
+        mo = vDatetime(tz.localize(dt.datetime(2013, 4, 25, 6, 0), is_dst=False))
         v = vDt(mo)
         self.assertTrue(v)
         self.assertEqual(v, mo)
@@ -115,7 +112,7 @@ class TestVDt(TestCase):
     def testUnknownTZDt(self):
         tz = pytz.FixedOffset(540)
         tz.zone = "Japan/Edo"
-        mo = timezone.make_aware(dt.datetime(2013, 4, 25, 6, 0), tz)
+        mo = tz.localize(dt.datetime(2013, 4, 25, 6, 0), is_dst=False)
         v = vDt(mo)
         self.assertTrue(v)
         self.assertEqual(v, mo)
@@ -199,8 +196,8 @@ class TestTimeZoneSpan(TestCase):
             vev,
             summary="Friday lunch",
             uid="1800",
-            dtstart=timezone.make_aware(dt.datetime(1996, 3, 1, 12), tz),
-            dtend=timezone.make_aware(dt.datetime(1996, 3, 1, 13), tz),
+            dtstart=tz.localize(dt.datetime(1996, 3, 1, 12), is_dst=False),
+            dtend=tz.localize(dt.datetime(1996, 3, 1, 13), is_dst=False),
         )
         span = TimeZoneSpan(vev)
         vtz = span.createVTimeZone(tz)
@@ -236,8 +233,8 @@ class TestTimeZoneSpan(TestCase):
             vev,
             summary="All lunch times",
             uid="999",
-            dtstart=timezone.make_aware(dt.datetime(1996, 3, 1, 12), tz),
-            dtend=timezone.make_aware(dt.datetime(1996, 3, 1, 13), tz),
+            dtstart=tz.localize(dt.datetime(1996, 3, 1, 12), is_dst=False),
+            dtend=tz.localize(dt.datetime(1996, 3, 1, 13), is_dst=False),
             rrule=vRecur.from_ical("FREQ=WEEKLY;WKST=SU;BYDAY=MO,TU,WE,TH,FR"),
         )
         span = TimeZoneSpan(vev)
@@ -246,8 +243,8 @@ class TestTimeZoneSpan(TestCase):
             vev,
             summary="Saturday Brunch",
             uid="2000",
-            dtstart=timezone.make_aware(dt.datetime(2019, 6, 4, 10), tz),
-            dtend=timezone.make_aware(dt.datetime(2019, 6, 4, 11, 30), tz),
+            dtstart=tz.localize(dt.datetime(2019, 6, 4, 10), is_dst=False),
+            dtend=tz.localize(dt.datetime(2019, 6, 4, 11, 30), is_dst=False),
         )
         span.add(vev)
         vtz = span.createVTimeZone(tz)
@@ -316,8 +313,8 @@ class TestTimeZoneSpan(TestCase):
             vev,
             summary="Storytelling",
             uid="1000",
-            dtstart=timezone.make_aware(dt.datetime(2016, 4, 5, 10), tz),
-            dtend=timezone.make_aware(dt.datetime(2016, 4, 5, 11), tz),
+            dtstart=tz.localize(dt.datetime(2016, 4, 5, 10), is_dst=False),
+            dtend=tz.localize(dt.datetime(2016, 4, 5, 11), is_dst=False),
             rrule=vRecur.from_ical("FREQ=WEEKLY;WKST=SU;BYDAY=TU;UNTIL=20160519"),
         )
         span = TimeZoneSpan(vev)
@@ -326,8 +323,8 @@ class TestTimeZoneSpan(TestCase):
             vev,
             summary="Parade",
             uid="1002",
-            dtstart=timezone.make_aware(dt.datetime(2016, 4, 5, 9), tz),
-            dtend=timezone.make_aware(dt.datetime(2016, 4, 5, 13), tz),
+            dtstart=tz.localize(dt.datetime(2016, 4, 5, 9), is_dst=False),
+            dtend=tz.localize(dt.datetime(2016, 4, 5, 13), is_dst=False),
         )
         span.add(vev)
         vtz = span.createVTimeZone(tz)
@@ -469,9 +466,9 @@ class TestVEventFactory(TestCase):
             props,
             summary="Event",
             uid="1234",
-            dtstart=timezone.make_aware(dt.datetime(2016, 6, 1, 7), tz1),
-            dtend=timezone.make_aware(dt.datetime(2016, 6, 1, 8), tz2),
-            dtstamp=timezone.make_aware(dt.datetime(2016, 6, 1, 8), tz2),
+            dtstart=tz1.localize(dt.datetime(2016, 6, 1, 7), is_dst=False),
+            dtend=tz2.localize(dt.datetime(2016, 6, 1, 8), is_dst=False),
+            dtstamp=tz2.localize(dt.datetime(2016, 6, 1, 8), is_dst=False),
         )
         with self.assertRaises(CalendarTypeError) as expected:
             self.factory.makeFromProps(props, None)
@@ -501,11 +498,11 @@ class TestVEventFactory(TestCase):
             props,
             summary="Event",
             uid="1234",
-            dtstart=timezone.make_aware(dt.datetime(2016, 6, 1, 7), tz1),
-            dtend=timezone.make_aware(dt.datetime(2016, 6, 1, 10), tz1),
-            dtstamp=timezone.make_aware(dt.datetime(2016, 6, 1, 8), tz2),
+            dtstart=tz1.localize(dt.datetime(2016, 6, 1, 7), is_dst=False),
+            dtend=tz1.localize(dt.datetime(2016, 6, 1, 10), is_dst=False),
+            dtstamp=tz2.localize(dt.datetime(2016, 6, 1, 8), is_dst=False),
         )
-        props.add("RECURRENCE-ID", timezone.make_aware(dt.datetime(2016, 6, 1, 8), tz2))
+        props.add("RECURRENCE-ID", tz2.localize(dt.datetime(2016, 6, 1, 8), is_dst=False))
         with self.assertRaises(CalendarTypeError) as expected:
             self.factory.makeFromProps(props, None)
         self.assertEqual(

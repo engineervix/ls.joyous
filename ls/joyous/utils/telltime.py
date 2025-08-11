@@ -97,24 +97,35 @@ def getAwareDatetime(date, time, tz, timeDefault=dt.time.max):
     """
     if time is None:
         time = timeDefault
-    datetime = dt.datetime.combine(date, time)
+    naive_dt = dt.datetime.combine(date, time)
 
-    # Handle Django version differences for make_aware
+    # Use pytz.localize for pytz timezones to avoid incorrect historical offsets
+    try:
+        import pytz  # type: ignore
+
+        if isinstance(tz, getattr(pytz, "tzinfo").BaseTzInfo):
+            try:
+                return tz.localize(naive_dt, is_dst=False)
+            except Exception:
+                # Fallback for ambiguous/non-existent times
+                return tz.localize(naive_dt, is_dst=True)
+    except Exception:
+        # pytz not available or tz is not pytz — continue with Django helpers
+        pass
+
+    # Handle Django version differences for make_aware (zoneinfo or None)
     if django.VERSION >= (5, 0):
         # Django 5.0+ removed is_dst parameter
         # https://docs.djangoproject.com/en/5.2/releases/5.0/#features-removed-in-5-0
         try:
-            datetime = timezone.make_aware(datetime, tz)
+            return timezone.make_aware(naive_dt, tz)
         except Exception:
             # If there's a DST ambiguity, try to handle it gracefully
             # by using the fold parameter (Python 3.6+)
-            datetime = datetime.replace(fold=1)  # Use standard time
-            datetime = timezone.make_aware(datetime, tz)
+            return timezone.make_aware(naive_dt.replace(fold=1), tz)
     else:
         # Django < 5.0 accepts is_dst parameter
-        datetime = timezone.make_aware(datetime, tz, is_dst=False)
-
-    return datetime
+        return timezone.make_aware(naive_dt, tz, is_dst=False)
 
 
 def todayUtc():
