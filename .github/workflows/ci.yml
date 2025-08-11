@@ -28,6 +28,7 @@ jobs:
       - name: Set up Python and install flake8
         run: |
           uv python install 3.12
+          uv venv --python 3.12
           uv pip install flake8
 
       - name: Run flake8
