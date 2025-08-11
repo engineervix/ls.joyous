@@ -11,6 +11,7 @@ python-dateutil
 feedgen
 
 django-beautifulsoup-test
+html5lib
 coveralls
 coverage
 freezegun
