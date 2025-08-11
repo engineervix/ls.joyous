@@ -1,3 +1,4 @@
+# flake8: noqa: W291
 # ------------------------------------------------------------------------------
 # Test RSS Format
 # ------------------------------------------------------------------------------
@@ -115,7 +116,7 @@ class TestFeed(TestCase):
     The first Tuesday of the month (until 26 December 2017)
   &lt;/div&gt;\n
   &lt;div class="joy-ev-next-on joy-field"&gt;
-    Next on Tuesday 3rd of January 2017
+    Next on Tuesday 3rd of January 2017 
   &lt;/div&gt;\n\n\n\n
 &lt;div class="rich-text"&gt;&lt;/div&gt;\n</description>""",
         )
