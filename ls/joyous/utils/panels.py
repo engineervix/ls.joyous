@@ -63,5 +63,3 @@ def get_panel_fields(panel: Panel) -> List[str]:
             seen.add(name)
             unique_fields.append(name)
     return unique_fields
-
-

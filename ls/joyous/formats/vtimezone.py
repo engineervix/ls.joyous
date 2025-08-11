@@ -45,24 +45,24 @@ def _ensure_pytz_timezone(tz):
     Returns the original timezone if it's already pytz or conversion fails.
     """
     # If it's already pytz, return as-is
-    if hasattr(tz, '_utc_transition_times'):
+    if hasattr(tz, "_utc_transition_times"):
         return tz
-    
+
     # Try to convert zoneinfo to pytz
-    if hasattr(tz, 'key'):
+    if hasattr(tz, "key"):
         try:
             return pytz.timezone(tz.key)
         except Exception:
             pass
-    
+
     # Try to get zone name and convert
-    zone_name = getattr(tz, 'zone', None)
+    zone_name = getattr(tz, "zone", None)
     if zone_name:
         try:
             return pytz.timezone(zone_name)
         except Exception:
             pass
-    
+
     # If conversion fails, return original (will be handled by caller)
     return tz
 
@@ -97,18 +97,18 @@ def create_timezone(tz, first_date=None, last_date=None):
 
     """
     # Convert zoneinfo to pytz if needed for compatibility
-    original_tz_name = getattr(tz, 'zone', getattr(tz, 'key', str(tz)))
+    original_tz_name = getattr(tz, "zone", getattr(tz, "key", str(tz)))
     tz = _ensure_pytz_timezone(tz)
-    
+
     if isinstance(tz, pytz.tzinfo.StaticTzInfo):
         return _create_timezone_static(tz, original_tz_name)
 
     # If we still don't have pytz transition data, skip VTIMEZONE creation
-    if not hasattr(tz, '_utc_transition_times'):
+    if not hasattr(tz, "_utc_transition_times"):
         # Return a minimal timezone component
         timezone = icalendar.Timezone()
         timezone.add("TZID", original_tz_name)
-        
+
         # Create a basic standard time component
         subcomp = icalendar.TimezoneStandard()
         subcomp.add("TZNAME", original_tz_name)

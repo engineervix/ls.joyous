@@ -316,37 +316,38 @@ def _saveRevision(request, page):
     # This fixes the issue where fromisoformat() receives non-string values
     from django.db.models.fields import DateTimeField
     import datetime
-    
+
     # Store original to_python method
     original_to_python = DateTimeField.to_python
-    
+
     def patched_to_python(self, value):
         # If value is None or empty, return None
-        if value is None or value == '':
+        if value is None or value == "":
             return None
         # If value is already a datetime, return it
         if isinstance(value, datetime.datetime):
             return value
-        # If value is not a string, convert it to None 
+        # If value is not a string, convert it to None
         if not isinstance(value, str):
             return None
         # Otherwise use the original method
         return original_to_python(self, value)
-    
+
     # Temporarily patch the method
     DateTimeField.to_python = patched_to_python
-    
+
     try:
         # Ensure we have a proper user object
         user = request.user
         if isinstance(user, str):
             from django.contrib.auth import get_user_model
+
             User = get_user_model()
             try:
                 user = User.objects.get(username=user)
             except User.DoesNotExist:
                 user = User.objects.first()
-        
+
         revision = page.save_revision(user, bool(request.POST.get("action-submit")))
         if bool(request.POST.get("action-publish")):
             revision.publish()
@@ -668,15 +669,22 @@ class VEvent(Event, VComponentMixin):
         page = self.Page(**kwargs)
         self.toPage(page)
         # Ensure datetime fields are not None to prevent fromisoformat errors
-        if not hasattr(page, 'first_published_at') or page.first_published_at is None:
+        if not hasattr(page, "first_published_at") or page.first_published_at is None:
             page.first_published_at = None  # This is OK to be None
-        if not hasattr(page, 'last_published_at') or page.last_published_at is None:
+        if not hasattr(page, "last_published_at") or page.last_published_at is None:
             page.last_published_at = None  # This is OK to be None
         # The issue might be with other datetime fields, let's be more defensive
         for field in page._meta.get_fields():
-            if hasattr(field, 'get_internal_type') and field.get_internal_type() == 'DateTimeField':
+            if (
+                hasattr(field, "get_internal_type")
+                and field.get_internal_type() == "DateTimeField"
+            ):
                 value = getattr(page, field.name, None)
-                if value is not None and not isinstance(value, (str, type(None))) and not hasattr(value, 'isoformat'):
+                if (
+                    value is not None
+                    and not isinstance(value, (str, type(None)))
+                    and not hasattr(value, "isoformat")
+                ):
                     # If it's not a string, None, or datetime-like object, set it to None
                     setattr(page, field.name, None)
         return page

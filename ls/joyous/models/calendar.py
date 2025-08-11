@@ -114,10 +114,16 @@ class CalendarPageForm(BorgPageForm):
 DatePictures = {
     "YYYY": r"((?:19|20)\d\d)",
     "MM": r"(1[012]|0?[1-9])",
-    "Mon": r"({})".format("|".join(sorted(set(
-        [m.lower()[:3] for m in MONTH_ABBRS[1:] if m] + 
-        [m[:3] for m in MONTH_ABBRS[1:] if m]
-    )))),
+    "Mon": r"({})".format(
+        "|".join(
+            sorted(
+                set(
+                    [m.lower()[:3] for m in MONTH_ABBRS[1:] if m]
+                    + [m[:3] for m in MONTH_ABBRS[1:] if m]
+                )
+            )
+        )
+    ),
     "DD": r"(3[01]|[12]\d|0?[1-9])",
     "WW": r"(5[0-3]|[1-4]\d|0?[1-9])",
 }
