@@ -1,3 +1,4 @@
+# flake8: noqa: W291
 # ------------------------------------------------------------------------------
 # Test ical Format
 # see also test_vevents.py, test_vutils.py and test_vcalendar.py
@@ -176,7 +177,7 @@ DTSTART;TZID=Pacific/Auckland:20180703T093000
 DTEND;TZID=Pacific/Auckland:20180703T113000
 RRULE:FREQ=WEEKLY;UNTIL=20180828T115959Z;BYDAY=TU
 EXDATE;TZID=Pacific/Auckland:20180814T093000
-        Next on Tuesday 3rd of January 2017
+DTSTAMP:20180722T060025Z
 UID:113qbmq1j4jf0jbiolheruff6n@google.com
 CREATED:20180722T035429Z
 DESCRIPTION:\nFammulturacha matent theaminerviencess atinjuse it shin sue o
@@ -372,7 +373,7 @@ END:VCALENDAR
         self.assertEqual(lilWeds.slug, "little-wednesday")
         self.assertEqual(lilWeds.title, "Little Wednesday")
         self.assertEqual(lilWeds.details, "")
-        self.assertEqual(lilWeds.tz, pytz.utc)
+        self.assertEqual(get_timezone_name(lilWeds.tz), "UTC")
         self.assertEqual(lilWeds.date, dt.date(2018, 7, 17))
         self.assertEqual(lilWeds.time_from, dt.time(22))
         self.assertEqual(lilWeds.time_to, dt.time(22, 30))
@@ -383,7 +384,7 @@ END:VCALENDAR
         self.assertEqual(cnfCall.slug, "conference-call")
         self.assertEqual(cnfCall.title, "Conference Call")
         self.assertEqual(cnfCall.details, "")
-        self.assertEqual(cnfCall.tz, pytz.utc)
+        self.assertEqual(get_timezone_name(cnfCall.tz), "UTC")
         self.assertEqual(cnfCall.date, dt.date(2018, 7, 23))
         self.assertEqual(cnfCall.time_from, dt.time(19))
         self.assertEqual(cnfCall.time_to, dt.time(20))
@@ -396,7 +397,7 @@ END:VCALENDAR
             "Hounit <b>catlike</b> at ethatial to thin a usistiques onshiend "
             "alits mily tente duse prommuniss ind sedships itommunte of perpollood.",
         )
-        self.assertEqual(bigThur.tz, pytz.utc)
+        self.assertEqual(get_timezone_name(bigThur.tz), "UTC")
         self.assertEqual(bigThur.date_from, dt.date(2018, 7, 25))
         self.assertEqual(bigThur.time_from, dt.time(21))
         self.assertEqual(bigThur.date_to, dt.date(2018, 7, 26))
@@ -605,7 +606,7 @@ URL:https://www.facebook.com/events/501511573641525/
 DESCRIPTION:The much anticipated 2018 West Coa
  st Alpine Club is open!\nEntries cl
  ose midnight Friday 24th August. F
- ull details and entry form in the
+ ull details and entry form in the 
  linked PDF: https://www.dropbox.co
  m/s/5vxnep33ccxok9z/PhotoCompDetai
  ls.pdf?dl=0\nDetails of the prize g
