@@ -4,7 +4,7 @@
 import pytz
 import datetime as dt
 from unittest import mock
-from django.test import RequestFactory
+from django.test import override_settings, RequestFactory
 from django_bs_test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -220,7 +220,9 @@ class Test(TestCase):
             "/events/test-meeting/1990-10-10-postponement/from/",
         )
 
-        with mock.patch("wagtail.coreutils.WAGTAIL_APPEND_SLASH", False):
+        with override_settings(WAGTAIL_APPEND_SLASH=False), mock.patch(
+            "wagtail.coreutils.WAGTAIL_APPEND_SLASH", False
+        ), mock.patch("wagtail.models.WAGTAIL_APPEND_SLASH", False, create=True):
             self.assertEqual(
                 self.postponement.getCancellationUrl(self.request),
                 "/events/test-meeting/1990-10-10-postponement/from",
