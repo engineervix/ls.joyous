@@ -221,7 +221,7 @@ class Test(TestCase):
         )
 
         with override_settings(WAGTAIL_APPEND_SLASH=False), mock.patch(
-            "wagtail.coreutils.WAGTAIL_APPEND_SLASH", False
+            "wagtail.models.pages.WAGTAIL_APPEND_SLASH", False
         ), mock.patch("wagtail.models.WAGTAIL_APPEND_SLASH", False, create=True):
             self.assertEqual(
                 self.postponement.getCancellationUrl(self.request),
