@@ -226,8 +226,9 @@ class Test(TestCase):
         else:
             patch_location = "wagtail.models.WAGTAIL_APPEND_SLASH"
 
-        with override_settings(WAGTAIL_APPEND_SLASH=False), \
-            mock.patch(patch_location, False):
+        with override_settings(WAGTAIL_APPEND_SLASH=False), mock.patch(
+            patch_location, False
+        ):
             self.assertEqual(
                 self.postponement.getCancellationUrl(self.request),
                 "/events/test-meeting/1990-10-10-postponement/from",
