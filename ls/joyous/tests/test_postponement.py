@@ -8,6 +8,7 @@ from django.test import override_settings, RequestFactory
 from django_bs_test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
+import wagtail
 from wagtail.models import Page
 from wagtail.test.utils.form_data import rich_text
 from ls.joyous.models import (
@@ -220,9 +221,13 @@ class Test(TestCase):
             "/events/test-meeting/1990-10-10-postponement/from/",
         )
 
-        with override_settings(WAGTAIL_APPEND_SLASH=False), mock.patch(
-            "wagtail.models.pages.WAGTAIL_APPEND_SLASH", False, create=True
-        ), mock.patch("wagtail.models.WAGTAIL_APPEND_SLASH", False, create=True):
+        if wagtail.VERSION >= (7, 0):
+            patch_location = "wagtail.models.pages.WAGTAIL_APPEND_SLASH"
+        else:
+            patch_location = "wagtail.models.WAGTAIL_APPEND_SLASH"
+
+        with override_settings(WAGTAIL_APPEND_SLASH=False), \
+            mock.patch(patch_location, False):
             self.assertEqual(
                 self.postponement.getCancellationUrl(self.request),
                 "/events/test-meeting/1990-10-10-postponement/from",
